@@ -1,6 +1,4 @@
-'use strict'
-
-var ResourceFilePlugin = require('./ResourceFilePlugin')
+import ResourceFilePlugin from './ResourceFilePlugin'
 
 function ResourceFileGetoptPlugin() {
 }
@@ -28,4 +26,4 @@ ResourceFileGetoptPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = ResourceFileGetoptPlugin
+export default ResourceFileGetoptPlugin

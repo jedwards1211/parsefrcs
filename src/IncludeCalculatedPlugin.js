@@ -1,5 +1,3 @@
-'use strict'
-
 function IncludeCalculatedPlugin() {
 }
 
@@ -11,4 +9,4 @@ IncludeCalculatedPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = IncludeCalculatedPlugin
+export default IncludeCalculatedPlugin

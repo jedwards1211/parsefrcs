@@ -1,15 +1,13 @@
-'use strict'
-
-var fs = require('fs')
-var path = require('path')
-var Tapable = require('tapable')
-var lineReader = require('line-reader')
+import fs from 'fs'
+import path from 'path'
+import Tapable from 'tapable'
+import lineReader from 'line-reader'
 var EventEmitter = require('events').EventEmitter
-var parseRawSurvey = require('./parseRawSurvey')
-var parseTripSummaries = require('./parseTripSummaries')
-var parseCalculatedSurvey = require('./parseCalculatedSurvey')
+import parseRawSurvey from './parseRawSurvey'
+import parseTripSummaries from './parseTripSummaries'
+import parseCalculatedSurvey from './parseCalculatedSurvey'
 
-var FrcsParser = module.exports = function (files) {
+var FrcsParser = export default function (files) {
   Tapable.call(this)
   this.files = files
 }

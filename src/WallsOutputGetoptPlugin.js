@@ -1,5 +1,3 @@
-'use strict'
-
 function WallsOutputGetoptPlugin(options) {
   this.options = options || {}
 }
@@ -25,4 +23,4 @@ WallsOutputGetoptPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = WallsOutputGetoptPlugin
+export default WallsOutputGetoptPlugin

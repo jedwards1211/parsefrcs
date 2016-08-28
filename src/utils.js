@@ -1,4 +1,4 @@
-var repeat = module.exports.repeat = function (s, times) {
+export function repeat(s, times) {
   var result = ''
   while (--times >= 0) {
     result += s
@@ -6,7 +6,7 @@ var repeat = module.exports.repeat = function (s, times) {
   return result
 }
 
-module.exports.setw = function (s, cols) {
+export function setw(s, cols) {
   s = String(s)
   if (s.length < cols) {
     return repeat(' ', cols - s.length) + s
@@ -14,7 +14,7 @@ module.exports.setw = function (s, cols) {
   return s
 }
 
-module.exports.findColumnWidths = function (line) {
+export function findColumnWidths(line) {
   var rx = /\s*\S+/g
   var match
   var widths = []
@@ -27,7 +27,7 @@ module.exports.findColumnWidths = function (line) {
   return widths
 }
 
-module.exports.fixedWidthSplit = function (line, columnWidths) {
+export function fixedWidthSplit(line, columnWidths) {
   var i = 0
   var start = 0
   var result = []
@@ -38,44 +38,44 @@ module.exports.fixedWidthSplit = function (line, columnWidths) {
   return result
 }
 
-var intRegex = /^\s*-?\d+$/
-var uintRegex = /^\s*\d+$/
-var ufloatRegex = /^\s*(\d+(\.\d*)?|\.\d+)$/
+const intRegex = /^\s*-?\d+$/
+const uintRegex = /^\s*\d+$/
+const ufloatRegex = /^\s*(\d+(\.\d*)?|\.\d+)$/
 
-module.exports.parseInt = function (s) {
+export function parseInt(s) {
   if (!s.match(intRegex)) throw new Error('invalid int: ' + s)
   return parseInt(s)
 }
 
-module.exports.parseUint = function (s) {
+export function parseUint(s) {
   if (!s.match(uintRegex)) throw new Error('invalid uint: ' + s)
   return parseInt(s)
 }
 
-module.exports.parseOptUint = function (s) {
+export function parseOptUint(s) {
   if (!s.match(uintRegex)) return undefined
   return parseInt(s)
 }
 
-module.exports.parseUfloat = function (s) {
+export function parseUfloat(s) {
   if (!s.match(ufloatRegex)) throw new Error('invalid ufloat: ' + s)
   return parseFloat(s)
 }
 
-module.exports.oppositeDeg = function (deg) {
+export function oppositeDeg(deg) {
   return deg < 180 ? deg + 180 : deg - 180
 }
 
-module.exports.gradToDeg = function (grad) {
+export function gradToDeg(grad) {
   return grad * 18 / 20
 }
 
-module.exports.milToDeg = function (mil) {
+export function milToDeg(mil) {
   return mil * 18 / 320
 }
 
-var METERS_TO_FEET = 1 / 0.3048
+const METERS_TO_FEET = 1 / 0.3048
 
-module.exports.metersToFeet = function (meters) {
+export function metersToFeet(meters) {
   return meters * METERS_TO_FEET
 }

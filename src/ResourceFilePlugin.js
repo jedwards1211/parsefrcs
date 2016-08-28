@@ -1,8 +1,6 @@
-'use strict'
-
-var fs = require('fs')
-var path = require('path')
-var _ = require('lodash')
+import fs from 'fs'
+import path from 'path'
+import _ from 'lodash'
 
 function ResourceFilePlugin(options) {
   this.options = options || {}
@@ -53,4 +51,4 @@ ResourceFilePlugin.prototype.apply = function (program) {
   }
 }
 
-module.exports = ResourceFilePlugin
+export default ResourceFilePlugin

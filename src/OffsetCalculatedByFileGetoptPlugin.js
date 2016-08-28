@@ -1,6 +1,4 @@
-'use strict'
-
-var OffsetCalculatedByFilePlugin = require('./OffsetCalculatedByFilePlugin')
+import OffsetCalculatedByFilePlugin from './OffsetCalculatedByFilePlugin'
 
 function OffsetCalculatedByFileGetoptPlugin() {
 }
@@ -19,4 +17,4 @@ OffsetCalculatedByFileGetoptPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = OffsetCalculatedByFileGetoptPlugin
+export default OffsetCalculatedByFileGetoptPlugin

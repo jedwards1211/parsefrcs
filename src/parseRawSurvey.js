@@ -1,6 +1,4 @@
-'use strict'
-
-var rawHeaderRegex = require('./regexes').rawHeaderRegex
+import {rawHeaderRegex} from './regexes'
 
 /**
  * Parses a raw cdata.fr survey file.  These look like so:
@@ -85,7 +83,7 @@ FI B  DD
  *
  * @returns a callback to which you pass lines of the file one by one.
  */
-module.exports = function (emitter) {
+export default function (emitter) {
   var tripName
   var inTripComment = true
   var tripCommentStartLine = 1

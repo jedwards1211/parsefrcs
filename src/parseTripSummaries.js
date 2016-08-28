@@ -1,7 +1,4 @@
-var utils = require('./utils')
-var _parseInt = utils.parseInt
-var _parseUint = utils.parseUint
-var _parseUfloat = utils.parseUfloat
+import {parseInt as _parseInt, parseUint as _parseUint, parseUfloat as _parseUfloat} from './utils'
 
 var tripStart = /^ {2}\d | {1}\d{2} |\d{3} |\d{4} /
 
@@ -126,7 +123,7 @@ null,
 }
 ]</pre>
  */
-module.exports = function (lines) {
+export default function (lines) {
   if (typeof lines === 'string') lines = lines.split(/\r\n|\n\r|\r|\n/)
 
   var result = []

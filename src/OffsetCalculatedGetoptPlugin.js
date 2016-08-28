@@ -1,6 +1,4 @@
-'use strict'
-
-var OffsetCalculatedPlugin = require('./OffsetCalculatedPlugin')
+import OffsetCalculatedPlugin from './OffsetCalculatedPlugin'
 
 function OffsetCalculatedGetoptPlugin() {
 }
@@ -23,4 +21,4 @@ OffsetCalculatedGetoptPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = OffsetCalculatedGetoptPlugin
+export default OffsetCalculatedGetoptPlugin

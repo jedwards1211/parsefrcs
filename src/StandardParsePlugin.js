@@ -1,8 +1,6 @@
-'use strict'
+import path from 'path'
 
-var path = require('path')
-
-var FrcsParser = require('./FrcsParser')
+import FrcsParser from './FrcsParser'
 
 function StandardParsePlugin() {
 }
@@ -47,4 +45,4 @@ StandardParsePlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = StandardParsePlugin
+export default StandardParsePlugin

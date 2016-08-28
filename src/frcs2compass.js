@@ -1,12 +1,10 @@
-'use strict'
-
-var ParseProgram = require('./ParseProgram')
-var FindFrcsFilesPlugin = require('./FindFrcsFilesPlugin')
-var StandardParsePlugin = require('./StandardParsePlugin')
-var CompassOutputPlugin = require('./CompassOutputPlugin')
-var DetectMultiDirectoryPlugin = require('./DetectMultiDirectoryPlugin')
-var PrintFilesFoundPlugin = require('./PrintFilesFoundPlugin')
-var AssociateTripSummariesPlugin = require('./AssociateTripSummariesPlugin')
+import ParseProgram from './ParseProgram'
+import FindFrcsFilesPlugin from './FindFrcsFilesPlugin'
+import StandardParsePlugin from './StandardParsePlugin'
+import CompassOutputPlugin from './CompassOutputPlugin'
+import DetectMultiDirectoryPlugin from './DetectMultiDirectoryPlugin'
+import PrintFilesFoundPlugin from './PrintFilesFoundPlugin'
+import AssociateTripSummariesPlugin from './AssociateTripSummariesPlugin'
 
 var program = new ParseProgram({
   getopt: {

@@ -1,4 +1,4 @@
-var utils = require('./utils')
+import utils from './utils'
 var _parseInt = utils.parseInt
 var _parseUint = utils.parseUint
 var _parseOptUint = utils.parseOptUint
@@ -61,7 +61,7 @@ function parseCalculatedShot(line) {
   }
 }
 
-module.exports = function (emitter) {
+export default function (emitter) {
   return function (line) {
     var data = parseCalculatedShot(line)
     if (data) emitter.emit('calculatedShot', data)

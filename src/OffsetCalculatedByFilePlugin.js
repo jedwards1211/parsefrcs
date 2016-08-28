@@ -1,6 +1,4 @@
-'use strict'
-
-var path = require('path')
+import path from 'path'
 
 function OffsetCalculatedByFilePlugin() {
 }
@@ -23,4 +21,4 @@ OffsetCalculatedByFilePlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = OffsetCalculatedByFilePlugin
+export default OffsetCalculatedByFilePlugin

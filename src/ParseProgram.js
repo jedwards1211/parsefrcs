@@ -1,10 +1,8 @@
-'use strict'
-
-var fs = require('fs')
-var path = require('path')
-var Tapable = require('tapable')
-var Getopt = require('node-getopt')
-var findFrcsFiles = require('./findFrcsFiles')
+import fs from 'fs'
+import path from 'path'
+import Tapable from 'tapable'
+import Getopt from 'node-getopt'
+import findFrcsFiles from './findFrcsFiles'
 
 function ParseProgram(options) {
   Tapable.call(this)
@@ -49,4 +47,4 @@ ParseProgram.prototype.getResources = function (dir) {
   return {}
 }
 
-module.exports = ParseProgram
+export default ParseProgram

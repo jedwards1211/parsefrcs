@@ -1,6 +1,4 @@
-'use strict'
-
-var OldBreakoutOutputPlugin = require('./OldBreakoutOutputPlugin')
+import OldBreakoutOutputPlugin from './OldBreakoutOutputPlugin'
 
 function OldBreakoutOutputGetoptPlugin() {
 }
@@ -19,4 +17,4 @@ OldBreakoutOutputGetoptPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = OldBreakoutOutputGetoptPlugin
+export default OldBreakoutOutputGetoptPlugin

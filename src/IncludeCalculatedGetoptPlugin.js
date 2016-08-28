@@ -1,6 +1,4 @@
-'use strict'
-
-var IncludeCalculatedPlugin = require('./IncludeCalculatedPlugin')
+import IncludeCalculatedPlugin from './IncludeCalculatedPlugin'
 
 function IncludeCalculatedGetoptPlugin() {
 }
@@ -19,4 +17,4 @@ IncludeCalculatedGetoptPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = IncludeCalculatedGetoptPlugin
+export default IncludeCalculatedGetoptPlugin

@@ -1,4 +1,4 @@
-var formatTripSummary = require('./formatTripSummary')
+import formatTripSummary from './formatTripSummary'
 
 function VRTripSummaryOutputPlugin() {}
 
@@ -50,4 +50,4 @@ VRTripSummaryOutputPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = VRTripSummaryOutputPlugin
+export default VRTripSummaryOutputPlugin

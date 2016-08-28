@@ -1,11 +1,9 @@
-'use strict'
-
-var fs = require('fs')
-var path = require('path')
-var normalizeTripName = require('./normalizeTripName')
-var compose = require('lodash/function/compose')
-var identity = require('lodash/utility/identity')
-var utils = require('./utils')
+import fs from 'fs'
+import path from 'path'
+import normalizeTripName from './normalizeTripName'
+import compose from 'lodash/function/compose'
+import identity from 'lodash/utility/identity'
+import utils from './utils'
 
 var distConverters = {
   'f': identity,
@@ -146,4 +144,4 @@ OldBreakoutOutputPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = OldBreakoutOutputPlugin
+export default OldBreakoutOutputPlugin

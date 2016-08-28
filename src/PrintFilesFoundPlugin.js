@@ -1,5 +1,3 @@
-'use strict'
-
 function PrintFilesFoundPlugin() {
 }
 
@@ -30,4 +28,4 @@ PrintFilesFoundPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = PrintFilesFoundPlugin
+export default PrintFilesFoundPlugin

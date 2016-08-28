@@ -1,6 +1,4 @@
-'use strict'
-
-var findFrcsFiles = require('./findFrcsFiles')
+import findFrcsFiles from './findFrcsFiles'
 
 function FindFrcsFilesPlugin() {
 }
@@ -21,4 +19,4 @@ FindFrcsFilesPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = FindFrcsFilesPlugin
+export default FindFrcsFilesPlugin

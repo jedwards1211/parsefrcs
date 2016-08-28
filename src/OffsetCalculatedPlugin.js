@@ -1,5 +1,3 @@
-'use strict'
-
 function OffsetCalculatedPlugin(options) {
   this.options = options || {}
 }
@@ -21,4 +19,4 @@ OffsetCalculatedPlugin.prototype.apply = function (program) {
   }
 }
 
-module.exports = OffsetCalculatedPlugin
+export default OffsetCalculatedPlugin

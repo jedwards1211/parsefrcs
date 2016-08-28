@@ -1,5 +1,5 @@
-var utils = require('./utils')
-var lineReader = require('line-reader')
+import utils from './utils'
+import lineReader from 'line-reader'
 
 // returns the most common fixed column widths in the file.
 // Some FRCS files have occasional irregularities when a field is
@@ -26,7 +26,7 @@ function findFileColumnWidths(file, expectedNumColumns) {
   return bestKey.split(',')
 }
 
-module.exports = findFileColumnWidths
+export default findFileColumnWidths
 
 if (!module.parent) {
   console.log(findFileColumnWidths(process.argv[2], parseInt(process.argv[3])))

@@ -1,6 +1,4 @@
-'use strict'
-
-var path = require('path')
+import path from 'path'
 
 function DetectMultiDirectoryPlugin() {}
 DetectMultiDirectoryPlugin.prototype.apply = function (program) {
@@ -21,4 +19,4 @@ DetectMultiDirectoryPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = DetectMultiDirectoryPlugin
+export default DetectMultiDirectoryPlugin

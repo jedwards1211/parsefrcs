@@ -1,4 +1,4 @@
-var utils = require('./utils')
+import utils from './utils'
 var setw = utils.setw
 var repeat = utils.repeat
 
@@ -8,7 +8,7 @@ var _33 = utils.repeat(' ', 33)
 
 // given a JSON trip summary like those returned by
 // parseTripSummaries(), output original FRCS fixed-width format
-module.exports = function formatTripSummary(summary) {
+export default function formatTripSummary(summary) {
   var s = setw(summary.tripNum, 3) + '  ' +
     setw(summary.date.getMonth() + 1, 2) + '/' +
     setw(summary.date.getDate(), 2) + '/' +

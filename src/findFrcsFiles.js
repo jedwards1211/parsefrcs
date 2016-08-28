@@ -1,8 +1,6 @@
-'use strict'
-
-var fs = require('fs')
-var path = require('path')
-var determineFrcsFileType = require('./determineFrcsFileType')
+import fs from 'fs'
+import path from 'path'
+import determineFrcsFileType from './determineFrcsFileType'
 
 function findFrcsFiles(paths, result, options, depth) {
   if (!result) result = {}
@@ -50,4 +48,4 @@ function findFrcsFiles(paths, result, options, depth) {
   return result
 }
 
-module.exports = findFrcsFiles
+export default findFrcsFiles

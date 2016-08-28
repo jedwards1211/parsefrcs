@@ -1,7 +1,5 @@
-'use strict'
-
-var lineReader = require('line-reader')
-var regexes = require('./regexes')
+import lineReader from 'line-reader'
+import regexes from './regexes'
 var parseCalculatedShot = require('./parseCalculatedSurvey').parseCalculatedShot
 var parseFirstLineOfSummary = require('./parseTripSummaries').parseFirstLineOfSummary
 
@@ -11,7 +9,7 @@ var parseFirstLineOfSummary = require('./parseTripSummaries').parseFirstLineOfSu
  *           "rawSurvey" or "tripSummaries" or "calculatedSurvey"
  *           or rejected if the file couldn't be identified
  */
-module.exports = function (file) {
+export default function (file) {
   var type, linecount
   lineReader.eachLineSync(file, function (line, last) {
     if (++linecount === 1000) {

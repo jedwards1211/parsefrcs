@@ -1,16 +1,14 @@
-'use strict'
-
-var ParseProgram = require('./ParseProgram')
-var FindFrcsFilesPlugin = require('./FindFrcsFilesPlugin')
-var StandardParsePlugin = require('./StandardParsePlugin')
-var IncludeCalculatedGetoptPlugin = require('./IncludeCalculatedGetoptPlugin')
-var OffsetCalculatedGetoptPlugin = require('./OffsetCalculatedGetoptPlugin')
-var OffsetCalculatedByFilePlugin = require('./OffsetCalculatedByFilePlugin')
-var ResourceFileGetoptPlugin = require('./ResourceFileGetoptPlugin')
-var WallsOutputGetoptPlugin = require('./WallsOutputGetoptPlugin')
-var DetectMultiDirectoryPlugin = require('./DetectMultiDirectoryPlugin')
-var PrintFilesFoundPlugin = require('./PrintFilesFoundPlugin')
-var AssociateTripSummariesPlugin = require('./AssociateTripSummariesPlugin')
+import ParseProgram from './ParseProgram'
+import FindFrcsFilesPlugin from './FindFrcsFilesPlugin'
+import StandardParsePlugin from './StandardParsePlugin'
+import IncludeCalculatedGetoptPlugin from './IncludeCalculatedGetoptPlugin'
+import OffsetCalculatedGetoptPlugin from './OffsetCalculatedGetoptPlugin'
+import OffsetCalculatedByFilePlugin from './OffsetCalculatedByFilePlugin'
+import ResourceFileGetoptPlugin from './ResourceFileGetoptPlugin'
+import WallsOutputGetoptPlugin from './WallsOutputGetoptPlugin'
+import DetectMultiDirectoryPlugin from './DetectMultiDirectoryPlugin'
+import PrintFilesFoundPlugin from './PrintFilesFoundPlugin'
+import AssociateTripSummariesPlugin from './AssociateTripSummariesPlugin'
 
 var program = new ParseProgram({
   getopt: {

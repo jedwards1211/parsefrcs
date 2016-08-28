@@ -1,5 +1,5 @@
-var fs = require('fs')
-var path = require('path')
+import fs from 'fs'
+import path from 'path'
 
 function FindSurveyScansPlugin(options) {
   this.options = options || {}
@@ -41,4 +41,4 @@ FindSurveyScansPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = FindSurveyScansPlugin
+export default FindSurveyScansPlugin

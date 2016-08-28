@@ -1,4 +1,4 @@
-var formatTripSummary = require('./formatTripSummary')
+import formatTripSummary from './formatTripSummary'
 
 function JsonTripSummaryOutputPlugin(options) {
   this.options = options
@@ -15,4 +15,4 @@ JsonTripSummaryOutputPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = JsonTripSummaryOutputPlugin
+export default JsonTripSummaryOutputPlugin

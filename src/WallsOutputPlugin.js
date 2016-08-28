@@ -1,8 +1,6 @@
-'use strict'
-
-var fs = require('fs')
-var path = require('path')
-var normalizeTripName = require('./normalizeTripName')
+import fs from 'fs'
+import path from 'path'
+import normalizeTripName from './normalizeTripName'
 
 function optionalNum(n) {
   return isNaN(n) || n === null ? '--' : String(n)
@@ -249,4 +247,4 @@ WallsOutputPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = WallsOutputPlugin
+export default WallsOutputPlugin

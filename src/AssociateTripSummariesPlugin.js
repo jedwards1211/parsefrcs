@@ -1,7 +1,5 @@
-'use strict'
-
-var path = require('path')
-var _ = require('lodash')
+import path from 'path'
+import _ from 'lodash'
 
 function AssociateTripSummariesPlugin(options) {
   this.options = options || {}
@@ -36,4 +34,4 @@ AssociateTripSummariesPlugin.prototype.apply = function (program) {
   })
 }
 
-module.exports = AssociateTripSummariesPlugin
+export default AssociateTripSummariesPlugin

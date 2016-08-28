@@ -1,8 +1,8 @@
 {
   "name": "parsefrcs",
-  "version": "2.2.0",
-  "description": "my personal skeleton for ES2015 library NPM packages",
-  "main": "lib/index.js",
+  "version": "1.0.0",
+  "description": "Parses FRCS cave survey data and converts to other formats",
+  "main": "frcs2walls.js",
   "scripts": {
     "lint": "eslint src test",
     "lint:fix": "eslint --fix src test",

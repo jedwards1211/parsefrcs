@@ -132,7 +132,7 @@ export default function (lines) {
     var trip = parseFirstLineOfSummary(lines[i])
 
     if (trip) {
-      trip.surveyors = lines[++i].trim().split(/  /)
+      trip.surveyors = lines[++i].trim().split(/ {2}/)
       trip.shots = []
 
       while (i < lines.length - 1 && !tripStart.test(lines[++i])) {

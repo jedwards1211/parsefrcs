@@ -92,7 +92,6 @@ export default function parseRawSurvey(emitter) {
   var inBlockComment = false
   var blockCommentStartLine
   var section
-  var comment
 
   var inches = false
   var distUnit
@@ -104,10 +103,6 @@ export default function parseRawSurvey(emitter) {
   var incCorrected = false
   var hasIncBs = false
 
-  function append(a, b) {
-    return a !== undefined ? a + ' ' + b : b
-  }
-
   // determines if a cell contains a valid station name.
   function isValidStation(s) {
     return s.match(/^\s*\S+\s*$/)
@@ -115,10 +110,6 @@ export default function parseRawSurvey(emitter) {
   // determines if a cell contains a valid unsigned integer.
   function isValidUInt(s) {
     return s.match(/^\s*[0-9]+\s*$/)
-  }
-  // determines if a cell contains a valid unsigned integer or whitespace.
-  function isValidOptUInt(s) {
-    return s.match(/^\s*[0-9]*\s*$/)
   }
   // determines if a cell contains a valid unsigned float or whitespace.
   function isValidOptUFloat(s) {
@@ -172,15 +163,10 @@ export default function parseRawSurvey(emitter) {
 
       if (lineCount === tripCommentStartLine + 1) {
         tripName = line && line.trim()
-        comment = undefined
       }
-      var match = /^\*\*\*([^*])\*\*\*/.exec(line)
+      let match = /^\*\*\*([^*])\*\*\*/.exec(line)
       if (match) {
         section = match[1].trim()
-      }
-
-      if (lineCount === tripCommentStartLine + 100) {
-
       }
     } else if (line.charAt(0) === '*') {
       inBlockComment = !inBlockComment
@@ -211,6 +197,9 @@ export default function parseRawSurvey(emitter) {
         distUnit,
         backAzmType,
         backIncType,
+        azmCorrected,
+        incCorrected,
+        hasIncBs,
         azmUnit,
         incUnit,
         comment: tripComment,
@@ -234,14 +223,15 @@ export default function parseRawSurvey(emitter) {
       var fromStr = line.substring(5, 10)
       if (!isValidStation(fromStr)) return
 
+      let feetStr, inchesStr
       // distance
       if (inches) {
-        var feetStr = line.substring(10, 14)
-        var inchesStr = line.substring(14, 17)
+        feetStr = line.substring(10, 14)
+        inchesStr = line.substring(14, 17)
         // feet and inches are not both optional
         if (!isValidUInt(feetStr) && !isValidUInt(inchesStr)) return
       } else {
-        var feetStr = line.substring(10, 16)
+        feetStr = line.substring(10, 16)
         // decimal feet are not optional
         if (!isValidUFloat(feetStr)) return
       }
@@ -305,8 +295,6 @@ export default function parseRawSurvey(emitter) {
         // down
         d: parseFloat(dStr),
       }
-
-      comment = undefined
 
       // parse distance
 

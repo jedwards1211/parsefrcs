@@ -49,7 +49,6 @@ export default class WallsOutputPlugin {
     })
 
     program.plugin('parser', function (parser) {
-      var tripsByName = {}
       var tripCount = 0
       var fd
       var out
@@ -227,11 +226,11 @@ export default class WallsOutputPlugin {
         }
         if (anyValid(shot.l, shot.r, shot.u, shot.d)) {
           cols.push('<' + [
-              optionalNum(shot.l),
-              optionalNum(shot.r),
-              optionalNum(shot.u),
-              optionalNum(shot.d),
-            ].join(',') + '>')
+            optionalNum(shot.l),
+            optionalNum(shot.r),
+            optionalNum(shot.u),
+            optionalNum(shot.d),
+          ].join(',') + '>')
         }
         out(cols.join('\t') + '\r\n')
       })

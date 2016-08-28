@@ -47,7 +47,6 @@ export default class FrcsParser extends Tapable {
     var rawSurveyFiles = this.files.rawSurvey
 
     rawSurveyFiles && rawSurveyFiles.forEach(function (file) {
-      var skip = false
       parser.applyPlugins('beforeRawSurveyFile', file)
       lineReader.eachLineSync(file, parseRawSurvey(events))
       parser.applyPlugins('afterRawSurveyFile', file)

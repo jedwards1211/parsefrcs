@@ -17,7 +17,7 @@ export default class ResourceFilePlugin {
       try {
         externalResources = JSON.parse(fs.readFileSync(externalResourceFile, 'utf8')) || {}
       } catch (e) {
-        console.error('invalid JSON syntax in resource file: ' + resourceFile)
+        console.error('invalid JSON syntax in resource file: ' + externalResourceFile)
         console.error(e)
       }
     }

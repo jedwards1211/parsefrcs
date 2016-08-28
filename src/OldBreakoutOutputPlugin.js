@@ -54,8 +54,6 @@ export default class OldBreakoutOutputPlugin {
     })
 
     program.plugin('parser', function (parser) {
-      var tripsByName = {}
-      var tripCount = 0
       var stationPositions = {}
       var currentTrip
       var comment
@@ -115,9 +113,9 @@ export default class OldBreakoutOutputPlugin {
           shot.to,
           convDist(shot.dist),
           convAzmFs(shot.azmFs),
-          incFs,
+          convIncFs(incFs),
           convAzmBs(shot.azmBs),
-          incBs,
+          convIncBs(incBs),
           convDist(shot.l) || 0,
           convDist(shot.r) || 0,
           convDist(shot.u) || 0,
@@ -136,9 +134,9 @@ export default class OldBreakoutOutputPlugin {
           cols[1] = currentDir + ':' + cols[1]
         }
         out(cols.map(function (val) {
-            return val === undefined || val === null ||
+          return val === undefined || val === null ||
             (typeof val === 'number' && isNaN(val)) ? '' : val
-          }).join('\t') + '\n')
+        }).join('\t') + '\n')
         comment = undefined
         return shot
       })

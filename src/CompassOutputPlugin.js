@@ -35,10 +35,6 @@ function niceNum(n) {
   return !isNaN(n) ? n.toFixed(2) : '-999.00'
 }
 
-function nice(s) {
-  return s === null || s === undefined ? '' : s
-}
-
 function formatDate(date) {
   if (!date) {
     return '1 1 1900'
@@ -55,22 +51,6 @@ function col(text, width) {
     text = ' ' + text
   }
   return text
-}
-
-function hasAngle(shot) {
-  return !isNaN(shot.azmFs) ||
-    !isNaN(shot.azmBs) ||
-    !isNaN(shot.incFs) ||
-    !isNaN(shot.incBs)
-}
-
-function anyHasAngle(shots) {
-  for (var i = 0; i < shots.length; i++) {
-    if (hasAngle(shots[i])) {
-      return true
-    }
-  }
-  return false
 }
 
 function formatTrip(cave, trip) {
@@ -129,8 +109,6 @@ export default class CompassOutputPlugin {
     })
 
     program.plugin('parser', function (parser) {
-      var tripsByName = {}
-      var tripCount = 0
       var currentTrip
       var stationPositions = {}
       var comment
@@ -193,7 +171,6 @@ export default class CompassOutputPlugin {
         return _comment
       })
       parser.plugin('shot', function (shot) {
-        var toStationPosition = stationPositions[shot.to] || {}
         var surveyScan = currentTrip && currentTrip.surveyScan
         if (surveyScan && basenameOnlySurveyScans) {
           surveyScan = path.basename(surveyScan)
@@ -218,7 +195,7 @@ export default class CompassOutputPlugin {
           col(to, 12),
           col(niceNum(convDist(shot.dist)), 7),
           col(niceNum(convAzmFs(shot.azmFs)), 7),
-          col(niceNum(incFs), 7),
+          col(niceNum(convIncFs(incFs)), 7),
           col(niceNum(convDist(shot.l)), 7),
           col(niceNum(convDist(shot.r)), 7),
           col(niceNum(convDist(shot.u)), 7),

@@ -1,5 +1,5 @@
 {
-  "name": "es2015-library-skeleton",
+  "name": "parsefrcs",
   "version": "2.2.0",
   "description": "my personal skeleton for ES2015 library NPM packages",
   "main": "lib/index.js",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jedwards1211/es2015-library-skeleton.git"
+    "url": "git+https://github.com/jedwards1211/parsefrcs.git"
   },
   "keywords": [
     "es2015"
@@ -25,9 +25,9 @@
   "author": "Andy Edwards",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jedwards1211/es2015-library-skeleton/issues"
+    "url": "https://github.com/jedwards1211/parsefrcs/issues"
   },
-  "homepage": "https://github.com/jedwards1211/es2015-library-skeleton#readme",
+  "homepage": "https://github.com/jedwards1211/parsefrcs#readme",
   "devDependencies": {
     "babel-cli": "^6.14.0",
     "babel-core": "^6.14.0",
@@ -48,5 +48,10 @@
     "sinon": "^1.17.5",
     "wr": "^1.3.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "line-reader": "github:jedwards1211/line-reader#sync-line-reader",
+    "lodash": "^4.15.0",
+    "node-getopt": "^0.2.3",
+    "tapable": "^0.2.4"
+  }
 }

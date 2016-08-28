@@ -1,10 +1,8 @@
-import utils from './utils'
-var setw = utils.setw
-var repeat = utils.repeat
+import {setw, repeat} from './utils'
 
-var _80 = utils.repeat(' ', 80)
-var _31 = utils.repeat(' ', 31)
-var _33 = utils.repeat(' ', 33)
+var _80 = repeat(' ', 80)
+var _31 = repeat(' ', 31)
+var _33 = repeat(' ', 33)
 
 // given a JSON trip summary like those returned by
 // parseTripSummaries(), output original FRCS fixed-width format

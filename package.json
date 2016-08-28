@@ -10,6 +10,7 @@
     "flow:watch": "clear && printf '\\e[3J'; flow status; wr --exec \"clear && printf '\\e[3J'; flow status\" src test",
     "test": "mocha $npm_package_config_mocha",
     "coverage": "babel-node ./node_modules/.bin/isparta cover --report lcov _mocha -- $npm_package_config_mocha",
+    "build": "rimraf lib && babel src --out-dir lib",
     "prepublish": "npm run lint:fix && flow && npm test && rimraf lib && babel src --out-dir lib"
   },
   "config": {

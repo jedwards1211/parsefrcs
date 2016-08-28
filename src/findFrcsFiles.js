@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import determineFrcsFileType from './determineFrcsFileType'
 
-function findFrcsFiles(paths, result, options, depth) {
+export default function findFrcsFiles(paths, result, options, depth) {
   if (!result) result = {}
   if (!options) options = {}
   if (!depth) depth = 0
@@ -47,5 +47,3 @@ function findFrcsFiles(paths, result, options, depth) {
 
   return result
 }
-
-export default findFrcsFiles

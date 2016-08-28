@@ -1,7 +1,7 @@
 import lineReader from 'line-reader'
-import regexes from './regexes'
-var parseCalculatedShot = require('./parseCalculatedSurvey').parseCalculatedShot
-var parseFirstLineOfSummary = require('./parseTripSummaries').parseFirstLineOfSummary
+import {rawHeaderRegex} from './regexes'
+import {parseCalculatedShot} from './parseCalculatedSurvey'
+import {parseFirstLineOfSummary} from './parseTripSummaries'
 
 /**
  * @param {String} file - a path to a file
@@ -15,7 +15,7 @@ export default function (file) {
     if (++linecount === 1000) {
       return false
     }
-    if (line.match(regexes.rawHeaderRegex)) {
+    if (line.match(rawHeaderRegex)) {
       type = 'rawSurvey'
       return false
     }

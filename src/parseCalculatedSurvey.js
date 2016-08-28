@@ -1,7 +1,4 @@
-import utils from './utils'
-var _parseInt = utils.parseInt
-var _parseUint = utils.parseUint
-var _parseOptUint = utils.parseOptUint
+import {strictParseInt, parseUint, parseOptUint} from './utils'
 
 /**
  * Parses data from a calculated survey file.  These look like so:
@@ -21,7 +18,7 @@ var _parseOptUint = utils.parseOptUint
  * @returns {Function} that you should call for each line in a file.  Each line that
  * is a valid calculated shot line will be passed to visitor.acceptCalculatedShot.
  */
-function parseCalculatedShot(line) {
+export function parseCalculatedShot(line) {
   if (line.length >= 72) {
     try {
       return {
@@ -30,29 +27,29 @@ function parseCalculatedShot(line) {
         // whether the shot is a surface measurement
         surface: line.charAt (6).toLowerCase() === 's',
         // index of the from station
-        fromNum: _parseUint(line.substring(7, 12)),
+        fromNum: parseUint(line.substring(7, 12)),
         // index of the to station
-        toNum: _parseUint(line.substring(12, 17)),
+        toNum: parseUint(line.substring(12, 17)),
         // x position of the to station
-        x: _parseInt (line.substring(17, 25)) / 100,
+        x: strictParseInt (line.substring(17, 25)) / 100,
         // y position of the to station
-        y: _parseInt (line.substring(25, 33)) / 100,
+        y: strictParseInt (line.substring(25, 33)) / 100,
         // z position of the to station
-        z: _parseInt (line.substring(33, 40)) / 100,
+        z: strictParseInt (line.substring(33, 40)) / 100,
         // x offset of the left wall at to station
-        lx: _parseInt (line.substring(40, 46)) / 100,
+        lx: strictParseInt (line.substring(40, 46)) / 100,
         // y offset of the left wall at to station
-        ly: _parseInt (line.substring(46, 52)) / 100,
+        ly: strictParseInt (line.substring(46, 52)) / 100,
         // x offset of the right wall at to station
-        rx: _parseInt (line.substring(52, 58)) / 100,
+        rx: strictParseInt (line.substring(52, 58)) / 100,
         // y offset of the right wall at to station
-        ry: _parseInt (line.substring(58, 64)) / 100,
+        ry: strictParseInt (line.substring(58, 64)) / 100,
         // up at to station
-        u: _parseUint(line.substring(64, 68)) / 10,
+        u: parseUint(line.substring(64, 68)) / 10,
         // down at to station
-        d: _parseUint(line.substring(68, 72)) / 10,
+        d: parseUint(line.substring(68, 72)) / 10,
         // trip number
-        tripNum: _parseOptUint(line.substring(72, 78))
+        tripNum: parseOptUint(line.substring(72, 78))
       }
     }
     catch (e) {
@@ -67,5 +64,3 @@ export default function (emitter) {
     if (data) emitter.emit('calculatedShot', data)
   }
 }
-
-module.exports.parseCalculatedShot = parseCalculatedShot

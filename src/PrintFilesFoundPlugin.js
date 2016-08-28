@@ -1,31 +1,28 @@
-function PrintFilesFoundPlugin() {
-}
+export default class PrintFilesFoundPlugin {
+  apply(program) {
+    program.plugin('configureGetopt', function (getopt) {
+      getopt.options.push(
+        ['', 'print-input-files', 'print input data files that were found and exit']
+      )
+    })
 
-PrintFilesFoundPlugin.prototype.apply = function (program) {
-  program.plugin('configureGetopt', function (getopt) {
-    getopt.options.push(
-      ['', 'print-input-files', 'print input data files that were found and exit']
-    )
-  })
+    var opt
 
-  var opt
-
-  program.plugin('gotopt', function (_opt) {
-    opt = _opt
-  })
-  program.plugin('foundFrcsFiles', function (files) {
-    if (opt.options['print-input-files']) {
-      for (var key in files) {
-        if (files.hasOwnProperty(key)) {
-          console.log(key + ':\n' +
-            files[key].map(function (file) {
-              return "  " + file
-            }).join('\n'))
+    program.plugin('gotopt', function (_opt) {
+      opt = _opt
+    })
+    program.plugin('foundFrcsFiles', function (files) {
+      if (opt.options['print-input-files']) {
+        for (var key in files) {
+          if (files.hasOwnProperty(key)) {
+            console.log(key + ':\n' +
+              files[key].map(function (file) {
+                return "  " + file
+              }).join('\n'))
+          }
         }
+        process.exit(0)
       }
-      process.exit(0)
-    }
-  })
+    })
+  }
 }
-
-export default PrintFilesFoundPlugin

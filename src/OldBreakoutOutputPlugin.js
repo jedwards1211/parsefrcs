@@ -1,147 +1,147 @@
 import fs from 'fs'
 import path from 'path'
-import normalizeTripName from './normalizeTripName'
-import compose from 'lodash/function/compose'
-import identity from 'lodash/utility/identity'
-import utils from './utils'
+import {flowRight, identity} from 'lodash'
+import {metersToFeet, gradToDeg, milToDeg, oppositeDeg} from './utils'
 
-var distConverters = {
+const distConverters = {
   'f': identity,
   'F': identity,
-  'm': utils.metersToFeet,
-  'M': utils.metersToFeet,
+  'm': metersToFeet,
+  'M': metersToFeet,
 }
 
-var angleConverters = {
+const angleConverters = {
   'd': identity,
   'D': identity,
-  'g': utils.gradToDeg,
-  'G': utils.gradToDeg,
-  'm': utils.milToDeg,
-  'M': utils.milToDeg,
+  'g': gradToDeg,
+  'G': gradToDeg,
+  'm': milToDeg,
+  'M': milToDeg,
 }
 
-function OldBreakoutOutputPlugin(options) {
-  this.options = options || {}
-}
+export default class OldBreakoutOutputPlugin {
+  constructor(options = {}) {
+    this.options = options
+  }
 
-OldBreakoutOutputPlugin.prototype.apply = function (program) {
-  var file = this.options.file
-  var basenameOnlySurveyScans = this.options.basenameOnlySurveyScans
-  var fd
-  var out
-  var currentDir
+  apply(program) {
+    var file = this.options.file
+    var basenameOnlySurveyScans = this.options.basenameOnlySurveyScans
+    var fd
+    var out
+    var currentDir
 
-  program.plugin('beforeParse', function (files) {
-    if (file) {
-      fd = fs.openSync(file, "w")
-      out = function (data) {
-        fs.writeSync(fd, data)
+    program.plugin('beforeParse', function (files) {
+      if (file) {
+        fd = fs.openSync(file, "w")
+        out = function (data) {
+          fs.writeSync(fd, data)
+        }
       }
-    }
-    else {
-      out = process.stdout.write.bind(process.stdout)
-    }
+      else {
+        out = process.stdout.write.bind(process.stdout)
+      }
 
-    out('From\tTo\tDistance\tFrontsight Azimuth\tFrontsight Inclination\tBacksight Azimuth\t' +
+      out('From\tTo\tDistance\tFrontsight Azimuth\tFrontsight Inclination\tBacksight Azimuth\t' +
         'Backsight Inclination\tLeft\tRight\tUp\tDown\tNorth\tEast\tElevation\tDescription\t' +
         'Date\tSurveyors\tComment\tScanned Notes\n')
-  })
-
-  program.plugin('afterParse', function () {
-    if (file) {
-      fs.closeSync(fd)
-    }
-  })
-
-  program.plugin('parser', function (parser) {
-    var tripsByName = {}
-    var tripCount = 0
-    var stationPositions = {}
-    var currentTrip
-    var comment
-    var multicave = program.multiDirectory
-
-    var convDist
-    var convAzmFs
-    var convAzmBs
-    var convIncFs
-    var convIncBs
-
-    parser.plugin('calculatedShot', function (shot) {
-      stationPositions[shot.toName] = shot
-      return shot
     })
 
-    parser.plugin('beforeRawSurveyFile', function (file) {
-      currentTrip = undefined
-      currentDir = path.basename(path.dirname(file))
-      out = process.stdout.write.bind(process.stdout)
-    })
-    parser.plugin('trip', function (trip) {
-      currentTrip = trip
-
-      convDist = distConverters[trip.distUnit[0]]
-
-      convAzmFs = convAzmBs = angleConverters[trip.azmUnit] || angleConverters.d
-      if (trip.backAzmType && trip.backAzmType.toUpperCase() !== 'C') {
-        convAzmBs = compose(utils.oppositeDeg, convAzmBs)
+    program.plugin('afterParse', function () {
+      if (file) {
+        fs.closeSync(fd)
       }
-      convIncFs = convIncBs = angleConverters[trip.incUnit]
-      if (trip.backIncType && trip.backIncType.toUpperCase() !== 'C') {
-        convIncBs = compose(function (a) { return -a }, convIncBs)
-      }
-      return trip
     })
-    parser.plugin('comment', function (_comment) {
-      comment = _comment
-      return _comment
-    })
-    parser.plugin('shot', function (shot) {
-      var toStationPosition = stationPositions[shot.to] || {}
-      var surveyScan = currentTrip && currentTrip.surveyScan
-      if (surveyScan && basenameOnlySurveyScans) {
-        surveyScan = path.basename(surveyScan)
-      }
-      var incFs = shot.incFs
-      var incBs = shot.incBs
-      if ((isNaN(incFs) || incFs === null) &&
+
+    program.plugin('parser', function (parser) {
+      var tripsByName = {}
+      var tripCount = 0
+      var stationPositions = {}
+      var currentTrip
+      var comment
+      var multicave = program.multiDirectory
+
+      var convDist
+      var convAzmFs
+      var convAzmBs
+      var convIncFs
+      var convIncBs
+
+      parser.plugin('calculatedShot', function (shot) {
+        stationPositions[shot.toName] = shot
+        return shot
+      })
+
+      parser.plugin('beforeRawSurveyFile', function (file) {
+        currentTrip = undefined
+        currentDir = path.basename(path.dirname(file))
+        out = process.stdout.write.bind(process.stdout)
+      })
+      parser.plugin('trip', function (trip) {
+        currentTrip = trip
+
+        convDist = distConverters[trip.distUnit[0]]
+
+        convAzmFs = convAzmBs = angleConverters[trip.azmUnit] || angleConverters.d
+        if (trip.backAzmType && trip.backAzmType.toUpperCase() !== 'C') {
+          convAzmBs = flowRight(oppositeDeg, convAzmBs)
+        }
+        convIncFs = convIncBs = angleConverters[trip.incUnit]
+        if (trip.backIncType && trip.backIncType.toUpperCase() !== 'C') {
+          convIncBs = flowRight(function (a) {
+            return -a
+          }, convIncBs)
+        }
+        return trip
+      })
+      parser.plugin('comment', function (_comment) {
+        comment = _comment
+        return _comment
+      })
+      parser.plugin('shot', function (shot) {
+        var toStationPosition = stationPositions[shot.to] || {}
+        var surveyScan = currentTrip && currentTrip.surveyScan
+        if (surveyScan && basenameOnlySurveyScans) {
+          surveyScan = path.basename(surveyScan)
+        }
+        var incFs = shot.incFs
+        var incBs = shot.incBs
+        if ((isNaN(incFs) || incFs === null) &&
           (isNaN(incBs) || incBs === null)) {
-        incFs = 0
-      }
-      var cols = [
-        shot.from,
-        shot.to,
-        convDist(shot.dist),
-        convAzmFs(shot.azmFs),
-        incFs,
-        convAzmBs(shot.azmBs),
-        incBs,
-        convDist(shot.l) || 0,
-        convDist(shot.r) || 0,
-        convDist(shot.u) || 0,
-        convDist(shot.d) || 0,
-        toStationPosition.y,
-        toStationPosition.x,
-        toStationPosition.z,
-        currentTrip && currentTrip.name,
-        currentTrip && currentTrip.date && currentTrip.date.toISOString().substring(0, 10),
-        currentTrip && currentTrip.surveyors && currentTrip.surveyors.join(', '),
-        comment,
-        surveyScan,
-      ]
-      if (multicave) {
-        cols[0] = currentDir + ':' + cols[0]
-        cols[1] = currentDir + ':' + cols[1]
-      }
-      out(cols.map(function (val) {
-        return val === undefined || val === null ||
-          (typeof val === 'number' && isNaN(val)) ? '' : val
-      }).join('\t') + '\n')
-      comment = undefined
-      return shot
+          incFs = 0
+        }
+        var cols = [
+          shot.from,
+          shot.to,
+          convDist(shot.dist),
+          convAzmFs(shot.azmFs),
+          incFs,
+          convAzmBs(shot.azmBs),
+          incBs,
+          convDist(shot.l) || 0,
+          convDist(shot.r) || 0,
+          convDist(shot.u) || 0,
+          convDist(shot.d) || 0,
+          toStationPosition.y,
+          toStationPosition.x,
+          toStationPosition.z,
+          currentTrip && currentTrip.name,
+          currentTrip && currentTrip.date && currentTrip.date.toISOString().substring(0, 10),
+          currentTrip && currentTrip.surveyors && currentTrip.surveyors.join(', '),
+          comment,
+          surveyScan,
+        ]
+        if (multicave) {
+          cols[0] = currentDir + ':' + cols[0]
+          cols[1] = currentDir + ':' + cols[1]
+        }
+        out(cols.map(function (val) {
+            return val === undefined || val === null ||
+            (typeof val === 'number' && isNaN(val)) ? '' : val
+          }).join('\t') + '\n')
+        comment = undefined
+        return shot
+      })
     })
-  })
+  }
 }
-
-export default OldBreakoutOutputPlugin

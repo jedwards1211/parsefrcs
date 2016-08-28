@@ -1,80 +1,79 @@
 import fs from 'fs'
-import path from 'path'
 import Tapable from 'tapable'
 import lineReader from 'line-reader'
-var EventEmitter = require('events').EventEmitter
+import {EventEmitter} from 'events'
 import parseRawSurvey from './parseRawSurvey'
 import parseTripSummaries from './parseTripSummaries'
 import parseCalculatedSurvey from './parseCalculatedSurvey'
 
-var FrcsParser = export default function (files) {
-  Tapable.call(this)
-  this.files = files
-}
+export default class FrcsParser extends Tapable {
+  constructor(files) {
+    super()
+    this.files = files
+  }
 
-FrcsParser.prototype = Object.create(Tapable.prototype)
+  parseTripSummaries() {
+    var parser = this
 
-FrcsParser.prototype.parseTripSummaries = function () {
-  var parser = this
+    parser.applyPlugins('beforeParseTripSummaries')
 
-  parser.applyPlugins('beforeParseTripSummaries')
+    var summaryFiles = this.files.tripSummaries
 
-  var summaryFiles = this.files.tripSummaries
-
-  summaryFiles && summaryFiles.forEach(function (summaryFile) {
-    parser.applyPlugins('beforeSummaryFile', summaryFile)
-    var data = fs.readFileSync(summaryFile, {encoding: 'utf8'})
-    var summaries = parseTripSummaries(data)
-    summaries.forEach(function (summary) {
-      summary = parser.applyPluginsWaterfall('tripSummary', summary)
+    summaryFiles && summaryFiles.forEach(function (summaryFile) {
+      parser.applyPlugins('beforeSummaryFile', summaryFile)
+      var data = fs.readFileSync(summaryFile, {encoding: 'utf8'})
+      var summaries = parseTripSummaries(data)
+      summaries.forEach(function (summary) {
+        summary = parser.applyPluginsWaterfall('tripSummary', summary)
+      })
+      parser.applyPlugins('afterSummaryFile', summaryFile)
     })
-    parser.applyPlugins('afterSummaryFile', summaryFile)
-  })
 
-  parser.applyPlugins('afterParseTripSummaries')
-}
+    parser.applyPlugins('afterParseTripSummaries')
+  }
 
-FrcsParser.prototype.parseRawSurvey = function (callback) {
-  var parser = this
+  parseRawSurvey(callback) {
+    var parser = this
 
-  parser.applyPlugins('beforeParseRawSurvey')
+    parser.applyPlugins('beforeParseRawSurvey')
 
-  var events = new EventEmitter();
-  ['cave', 'trip', 'shot', 'comment'].forEach(function (event) {
-    events.on(event, function (val) {
-      parser.applyPluginsWaterfall(event, val)
+    var events = new EventEmitter();
+    ['cave', 'trip', 'shot', 'comment'].forEach(function (event) {
+      events.on(event, function (val) {
+        parser.applyPluginsWaterfall(event, val)
+      })
     })
-  })
 
-  var rawSurveyFiles = this.files.rawSurvey
+    var rawSurveyFiles = this.files.rawSurvey
 
-  rawSurveyFiles && rawSurveyFiles.forEach(function (file) {
-    var skip = false
-    parser.applyPlugins('beforeRawSurveyFile', file)
-    lineReader.eachLineSync(file, parseRawSurvey(events))
-    parser.applyPlugins('afterRawSurveyFile', file)
-  })
+    rawSurveyFiles && rawSurveyFiles.forEach(function (file) {
+      var skip = false
+      parser.applyPlugins('beforeRawSurveyFile', file)
+      lineReader.eachLineSync(file, parseRawSurvey(events))
+      parser.applyPlugins('afterRawSurveyFile', file)
+    })
 
-  parser.applyPlugins('afterParseRawSurvey')
-}
+    parser.applyPlugins('afterParseRawSurvey')
+  }
 
-FrcsParser.prototype.parseCalculatedSurvey = function () {
-  var parser = this
+  parseCalculatedSurvey() {
+    var parser = this
 
-  parser.applyPlugins('beforeParseCalculatedSurvey')
+    parser.applyPlugins('beforeParseCalculatedSurvey')
 
-  var events = new EventEmitter()
-  events.on('calculatedShot', function (shot) {
-    parser.applyPluginsWaterfall('calculatedShot', shot)
-  })
+    var events = new EventEmitter()
+    events.on('calculatedShot', function (shot) {
+      parser.applyPluginsWaterfall('calculatedShot', shot)
+    })
 
-  var calcSurveyFiles = this.files.calculatedSurvey
+    var calcSurveyFiles = this.files.calculatedSurvey
 
-  calcSurveyFiles && calcSurveyFiles.forEach(function (file) {
-    parser.applyPlugins('beforeCalculatedSurveyFile', file)
-    lineReader.eachLineSync(file, parseCalculatedSurvey(events))
-    parser.applyPlugins('afterCalculatedSurveyFile', file)
-  })
+    calcSurveyFiles && calcSurveyFiles.forEach(function (file) {
+      parser.applyPlugins('beforeCalculatedSurveyFile', file)
+      lineReader.eachLineSync(file, parseCalculatedSurvey(events))
+      parser.applyPlugins('afterCalculatedSurveyFile', file)
+    })
 
-  parser.applyPlugins('afterParseCalculatedSurvey')
+    parser.applyPlugins('afterParseCalculatedSurvey')
+  }
 }

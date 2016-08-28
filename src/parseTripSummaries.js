@@ -1,14 +1,14 @@
-import {parseInt as _parseInt, parseUint as _parseUint, parseUfloat as _parseUfloat} from './utils'
+import {strictParseInt, parseUint, parseUfloat} from './utils'
 
 var tripStart = /^ {2}\d | {1}\d{2} |\d{3} |\d{4} /
 
-function parseFirstLineOfSummary(line) {
+export function parseFirstLineOfSummary(line) {
   if (line.startsWith('\f')) {
     line = line.substring(1)
   }
 
   try {
-    var tripNum = parseInt(line.substring(0, 4))
+    var tripNum = strictParseInt(line.substring(0, 4))
 
     if (tripNum >= 1000) {
       // There are only 3 columns reserved for the trip number, so when we
@@ -18,7 +18,7 @@ function parseFirstLineOfSummary(line) {
       line = line.substring(0, 4).concat(line.substring(5))
     }
 
-    var year = parseInt(line.substring(11, 14))
+    var year = strictParseInt(line.substring(11, 14))
 
     if (year >= 100) {
       year += 1900
@@ -32,14 +32,12 @@ function parseFirstLineOfSummary(line) {
 
     return {
       tripNum,
-      date: new Date(year,
-                                       _parseUint(line.substring(5, 7)) - 1,
-                                       _parseUint(line.substring(8, 10))),
-      footage: _parseUfloat(line.substring(14, 23)),
-      numShots: _parseUfloat(line.substring(24, 28)),
+      date: new Date(year, parseUint(line.substring(5, 7)) - 1, parseUint(line.substring(8, 10))),
+      footage: parseUfloat(line.substring(14, 23)),
+      numShots: parseUfloat(line.substring(24, 28)),
       name: line.substring(30, 111).trim(),
-      excludedFootage: _parseUfloat(line.substring(120, 127)),
-      numExcludedShots: _parseUint(line.substring(127, 130)),
+      excludedFootage: parseUfloat(line.substring(120, 127)),
+      numExcludedShots: parseUint(line.substring(127, 130)),
     }
   }
   catch (e) {
@@ -155,5 +153,3 @@ export default function (lines) {
 
   return result
 }
-
-module.exports.parseFirstLineOfSummary = parseFirstLineOfSummary

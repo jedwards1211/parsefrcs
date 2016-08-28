@@ -1,9 +1,7 @@
 import fs from 'fs'
 import path from 'path'
-import normalizeTripName from './normalizeTripName'
-import compose from 'lodash/function/compose'
-import identity from 'lodash/utility/identity'
-import utils from './utils'
+import {flowRight, identity} from 'lodash'
+import {metersToFeet, gradToDeg, milToDeg, oppositeDeg} from './utils'
 
 var distUnitMap = {
   FT: 'D',
@@ -20,17 +18,17 @@ var angleUnitMap = {
 var distConverters = {
   'f': identity,
   'F': identity,
-  'm': utils.metersToFeet,
-  'M': utils.metersToFeet,
+  'm': metersToFeet,
+  'M': metersToFeet,
 }
 
 var angleConverters = {
   'd': identity,
   'D': identity,
-  'g': utils.gradToDeg,
-  'G': utils.gradToDeg,
-  'm': utils.milToDeg,
-  'M': utils.milToDeg,
+  'g': gradToDeg,
+  'G': gradToDeg,
+  'm': milToDeg,
+  'M': milToDeg,
 }
 
 function niceNum(n) {
@@ -98,151 +96,153 @@ function formatTrip(cave, trip) {
     '\r\n'
 }
 
-function CompassOutputPlugin(options) {
-  this.options = options || {}
-}
+export default class CompassOutputPlugin {
+  constructor(options = {}) {
+    this.options = options
+  }
 
-CompassOutputPlugin.prototype.apply = function (program) {
-  var file = this.options.file
-  var basenameOnlySurveyScans = this.options.basenameOnlySurveyScans
-  var fd
-  var out
-  var currentDir
-  var hasTrips
+  apply(program) {
+    var file = this.options.file
+    var basenameOnlySurveyScans = this.options.basenameOnlySurveyScans
+    var fd
+    var out
+    var currentDir
+    var hasTrips
 
-  program.plugin('beforeParse', function (files) {
-    if (file) {
-      fd = fs.openSync(file, "w")
-      out = function (data) {
-        fs.writeSync(fd, data)
-      }
-    }
-    else {
-      out = process.stdout.write.bind(process.stdout)
-    }
-  })
-
-  program.plugin('afterParse', function () {
-    if (hasTrips) out('\f\r\n')
-    if (file) {
-      fs.closeSync(fd)
-    }
-  })
-
-  program.plugin('parser', function (parser) {
-    var tripsByName = {}
-    var tripCount = 0
-    var currentTrip
-    var stationPositions = {}
-    var comment
-    var cave
-    var multicave = program.multiDirectory
-    var prefix
-
-    var convDist
-    var convAzmFs
-    var convAzmBs
-    var convIncFs
-    var convIncBs
-
-    parser.plugin('cave', function (_cave) {
-      cave = _cave
-    })
-
-    parser.plugin('calculatedShot', function (shot) {
-      stationPositions[shot.toName] = shot
-      return shot
-    })
-
-    parser.plugin('beforeRawSurveyFile', function (file) {
-      if (hasTrips) out('\f\r\n')
-      currentDir = path.basename(path.dirname(file))
-      if (multicave) {
-        prefix = currentDir.substring(0, 6).replace(/\s/g, '_') + ':'
-      }
-      out = process.stdout.write.bind(process.stdout)
-    })
-    parser.plugin('trip', function (trip) {
-      currentTrip = trip
-      if (hasTrips) out('\f\r\n')
-      hasTrips = true
-
-      convDist = distConverters[trip.distUnit[0]]
-
-      convAzmFs = convAzmBs = angleConverters[trip.azmUnit] || angleConverters.d
-      if (trip.backAzmType && trip.backAzmType[0].toUpperCase() === 'C') {
-        convAzmBs = compose(utils.oppositeDeg, convAzmBs)
-      }
-      convIncFs = convIncBs = angleConverters[trip.incUnit] || angleConverters.d
-      if (trip.backIncType && trip.backIncType[0].toUpperCase() === 'C') {
-        convIncBs = compose(function (a) { return -a }, convIncBs)
-      }
-
-      out(formatTrip(cave, trip))
-
-      return trip
-    })
-    parser.plugin('comment', function (_comment) {
-      if (comment) {
-        comment += '\t' + _comment
+    program.plugin('beforeParse', function (files) {
+      if (file) {
+        fd = fs.openSync(file, "w")
+        out = function (data) {
+          fs.writeSync(fd, data)
+        }
       }
       else {
-        comment = _comment
+        out = process.stdout.write.bind(process.stdout)
       }
-      return _comment
     })
-    parser.plugin('shot', function (shot) {
-      var toStationPosition = stationPositions[shot.to] || {}
-      var surveyScan = currentTrip && currentTrip.surveyScan
-      if (surveyScan && basenameOnlySurveyScans) {
-        surveyScan = path.basename(surveyScan)
+
+    program.plugin('afterParse', function () {
+      if (hasTrips) out('\f\r\n')
+      if (file) {
+        fs.closeSync(fd)
       }
-      var incFs = shot.incFs
-      var incBs = shot.incBs
-      if ((isNaN(incFs) || incFs === null) &&
+    })
+
+    program.plugin('parser', function (parser) {
+      var tripsByName = {}
+      var tripCount = 0
+      var currentTrip
+      var stationPositions = {}
+      var comment
+      var cave
+      var multicave = program.multiDirectory
+      var prefix
+
+      var convDist
+      var convAzmFs
+      var convAzmBs
+      var convIncFs
+      var convIncBs
+
+      parser.plugin('cave', function (_cave) {
+        cave = _cave
+      })
+
+      parser.plugin('calculatedShot', function (shot) {
+        stationPositions[shot.toName] = shot
+        return shot
+      })
+
+      parser.plugin('beforeRawSurveyFile', function (file) {
+        if (hasTrips) out('\f\r\n')
+        currentDir = path.basename(path.dirname(file))
+        if (multicave) {
+          prefix = currentDir.substring(0, 6).replace(/\s/g, '_') + ':'
+        }
+        out = process.stdout.write.bind(process.stdout)
+      })
+      parser.plugin('trip', function (trip) {
+        currentTrip = trip
+        if (hasTrips) out('\f\r\n')
+        hasTrips = true
+
+        convDist = distConverters[trip.distUnit[0]]
+
+        convAzmFs = convAzmBs = angleConverters[trip.azmUnit] || angleConverters.d
+        if (trip.backAzmType && trip.backAzmType[0].toUpperCase() === 'C') {
+          convAzmBs = flowRight(oppositeDeg, convAzmBs)
+        }
+        convIncFs = convIncBs = angleConverters[trip.incUnit] || angleConverters.d
+        if (trip.backIncType && trip.backIncType[0].toUpperCase() === 'C') {
+          convIncBs = flowRight(function (a) {
+            return -a
+          }, convIncBs)
+        }
+
+        out(formatTrip(cave, trip))
+
+        return trip
+      })
+      parser.plugin('comment', function (_comment) {
+        if (comment) {
+          comment += '\t' + _comment
+        }
+        else {
+          comment = _comment
+        }
+        return _comment
+      })
+      parser.plugin('shot', function (shot) {
+        var toStationPosition = stationPositions[shot.to] || {}
+        var surveyScan = currentTrip && currentTrip.surveyScan
+        if (surveyScan && basenameOnlySurveyScans) {
+          surveyScan = path.basename(surveyScan)
+        }
+        var incFs = shot.incFs
+        var incBs = shot.incBs
+        if ((isNaN(incFs) || incFs === null) &&
           (isNaN(incBs) || incBs === null)) {
-        incFs = 0
-      }
+          incFs = 0
+        }
 
-      var from = shot.from
-      var to = shot.to
+        var from = shot.from
+        var to = shot.to
 
-      if (multicave) {
-        from = prefix + from
-        to = prefix + to
-      }
+        if (multicave) {
+          from = prefix + from
+          to = prefix + to
+        }
 
-      var cols = [
-        col(from, 12),
-        col(to, 12),
-        col(niceNum(convDist(shot.dist)), 7),
-        col(niceNum(convAzmFs(shot.azmFs)), 7),
-        col(niceNum(incFs), 7),
-        col(niceNum(convDist(shot.l)), 7),
-        col(niceNum(convDist(shot.r)), 7),
-        col(niceNum(convDist(shot.u)), 7),
-        col(niceNum(convDist(shot.d)), 7),
-        col(niceNum(convAzmBs(shot.azmBs)), 7),
-        col(niceNum(convIncBs(incBs)), 7),
-      ]
+        var cols = [
+          col(from, 12),
+          col(to, 12),
+          col(niceNum(convDist(shot.dist)), 7),
+          col(niceNum(convAzmFs(shot.azmFs)), 7),
+          col(niceNum(incFs), 7),
+          col(niceNum(convDist(shot.l)), 7),
+          col(niceNum(convDist(shot.r)), 7),
+          col(niceNum(convDist(shot.u)), 7),
+          col(niceNum(convDist(shot.d)), 7),
+          col(niceNum(convAzmBs(shot.azmBs)), 7),
+          col(niceNum(convIncBs(incBs)), 7),
+        ]
 
-      if (shot.exclude || shot.surface) {
-        var flags = '#|'
-        if (shot.exclude) flags += 'L'
-        if (shot.surface) flags += 'P'
-        flags += '#'
-        cols.push(flags)
-      }
+        if (shot.exclude || shot.surface) {
+          var flags = '#|'
+          if (shot.exclude) flags += 'L'
+          if (shot.surface) flags += 'P'
+          flags += '#'
+          cols.push(flags)
+        }
 
-      if (comment) {
-        cols.push(comment)
-      }
+        if (comment) {
+          cols.push(comment)
+        }
 
-      out(cols.join(' ') + '\r\n')
-      comment = undefined
-      return shot
+        out(cols.join(' ') + '\r\n')
+        comment = undefined
+        return shot
+      })
     })
-  })
+  }
 }
-
-export default CompassOutputPlugin

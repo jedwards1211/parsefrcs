@@ -83,7 +83,7 @@ FI B  DD
  *
  * @returns a callback to which you pass lines of the file one by one.
  */
-export default function (emitter) {
+export default function parseRawSurvey(emitter) {
   var tripName
   var inTripComment = true
   var tripCommentStartLine = 1
@@ -139,7 +139,7 @@ export default function (emitter) {
 
   var lineCount = 0
 
-  return function (line) {
+  return function parseRawSurveyLine(line) {
     lineCount++
 
     if (lineCount === 1) {

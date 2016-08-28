@@ -83,7 +83,7 @@ FI B  DD
  *
  * @returns a callback to which you pass lines of the file one by one.
  */
-export default function parseRawSurvey(emitter) {
+export default function parseRawSurvey(emitter, file) {
   var tripName
   var inTripComment = true
   var tripCommentStartLine = 1
@@ -128,12 +128,31 @@ export default function parseRawSurvey(emitter) {
     return s.match(/^\s*[-+]?[0-9]*(\.[0-9]*)?\s*$/)
   }
 
-  var lineCount = 0
+  var lineNumber = 0
 
   return function parseRawSurveyLine(line) {
-    lineCount++
+    let errored = false
+    function error(message, startColumn, endColumn) {
+      errored = true
+      emitter.emit('parseError', {
+        file,
+        line: lineNumber,
+        severity: 'error',
+        startColumn,
+        endColumn,
+        message
+      })
+    }
 
-    if (lineCount === 1) {
+    function validate(startColumn, endColumn, fieldName, validator) {
+      const field = line.substring(startColumn, endColumn)
+      if (!validator(field)) error((field.trim() ? 'Invalid ' : 'Missing ') + fieldName, startColumn, endColumn)
+      return field
+    }
+
+    lineNumber++
+
+    if (lineNumber === 1) {
       var match = /^\s*([^,]+)(,(.*))?/.exec(line)
       if (match) {
         var cave = {
@@ -151,17 +170,17 @@ export default function parseRawSurvey(emitter) {
       if (inTripComment) {
         section = undefined
         tripComment = []
-        tripCommentStartLine = lineCount
+        tripCommentStartLine = lineNumber
       }
       else {
-        tripCommentEndLine = lineCount
+        tripCommentEndLine = lineNumber
       }
     } else if (inTripComment) {
-      if (lineCount > 1) {
+      if (lineNumber > 1) {
         tripComment.push(line)
       }
 
-      if (lineCount === tripCommentStartLine + 1) {
+      if (lineNumber === tripCommentStartLine + 1) {
         tripName = line && line.trim()
       }
       let match = /^\*\*\*([^*])\*\*\*/.exec(line)
@@ -171,14 +190,14 @@ export default function parseRawSurvey(emitter) {
     } else if (line.charAt(0) === '*') {
       inBlockComment = !inBlockComment
       if (inBlockComment) {
-        blockCommentStartLine = lineCount
+        blockCommentStartLine = lineNumber
       }
-      else if (lineCount === blockCommentStartLine + 1 && line.length > 1) {
+      else if (lineNumber === blockCommentStartLine + 1 && line.length > 1) {
         emitter.emit('comment', line.substring(1).trim())
       }
     } else if (inBlockComment) {
       emitter.emit('comment', line.trim())
-    } else if (lineCount === tripCommentEndLine + 1) {
+    } else if (lineNumber === tripCommentEndLine + 1) {
       var matches = rawHeaderRegex.exec(line)
       distUnit = matches[1]
       backAzmType = matches[2]
@@ -193,6 +212,9 @@ export default function parseRawSurvey(emitter) {
       tripComment = (tripComment || []).join('\n')
 
       var trip = {
+        file,
+        startLine: tripCommentStartLine,
+        endLine: tripCommentEndLine,
         name: tripName,
         distUnit,
         backAzmType,
@@ -217,11 +239,11 @@ export default function parseRawSurvey(emitter) {
 
       // to station name
       var toStr = line.substring(0, 5)
-      if (!isValidStation(toStr)) return
+      if (!toStr.trim()) return
+      if (!isValidStation(toStr)) error('Invalid station name', 0, 5)
 
       // from station name
-      var fromStr = line.substring(5, 10)
-      if (!isValidStation(fromStr)) return
+      var fromStr = validate(5, 10, 'from station', isValidStation)
 
       let feetStr, inchesStr
       // distance
@@ -229,49 +251,47 @@ export default function parseRawSurvey(emitter) {
         feetStr = line.substring(10, 14)
         inchesStr = line.substring(14, 17)
         // feet and inches are not both optional
-        if (!isValidUInt(feetStr) && !isValidUInt(inchesStr)) return
+        if (!isValidUInt(feetStr) && !isValidUInt(inchesStr)) {
+          error(feetStr.trim() || inchesStr.trim() ? 'Invalid distance' : 'Missing distance', 10, 17)
+        }
       } else {
-        feetStr = line.substring(10, 16)
         // decimal feet are not optional
-        if (!isValidUFloat(feetStr)) return
+        feetStr = validate(10, 16, 'distance', isValidUFloat)
       }
 
       // frontsight azimuth
-      var azmFsStr = line.substring(19, 25)
-      if (!isValidOptUFloat(azmFsStr)) return
+      var azmFsStr = validate(19, 25, 'azimuth', isValidOptUFloat)
 
       // backsight azimuth
-      var azmBsStr = line.substring(25, 30)
-      if (!isValidOptUFloat(azmBsStr)) return
+      var azmBsStr = validate(25, 30, 'azimuth', isValidOptUFloat)
 
       // frontsight inclination
-      var incFsStr = line.substring(30, 35)
-      if (!isValidOptInclination(incFsStr)) return
+      var incFsStr = validate(30, 35, 'inclination', isValidOptInclination)
 
       // backsight inclination
-      var incBsStr = line.substring(35, 40)
-      if (!isValidOptInclination(incBsStr)) return
+      var incBsStr = validate(35, 40, 'inclination', isValidOptInclination)
 
       // left
-      var lStr = line.substring(40, 43)
       // Yes, sadly I have found negative LRUD values in Chip's format and apparently
       // his program doesn't fail on them, so I have to accept them here
       // isValidOptFloat instead of isValidOptUFloat
-      if (!isValidOptFloat(lStr)) return
+      var lStr = validate(40, 43, 'distance', isValidOptFloat)
 
       // right
-      var rStr = line.substring(43, 46)
-      if (!isValidOptFloat(rStr)) return
+      var rStr = validate(43, 46, 'distance', isValidOptFloat)
 
       // up
-      var uStr = line.substring(46, 49)
-      if (!isValidOptFloat(uStr)) return
+      var uStr = validate(46, 49, 'distance', isValidOptFloat)
 
       // down
-      var dStr = line.substring(49, 52)
-      if (!isValidOptFloat(dStr)) return
+      var dStr = validate(49, 52, 'distance', isValidOptFloat)
+
+      if (errored) return
 
       var shot = {
+        file,
+        line: lineNumber,
+        text: line,
         // to station name
         to: toStr.trim(),
         // from station name

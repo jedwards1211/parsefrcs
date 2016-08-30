@@ -1,7 +1,6 @@
 import {repeat} from 'lodash'
 
-
-export default class PrintErrorsAndWarningsPlugin {
+export default class ErrorOutputPlugin {
   apply(program) {
     let errorCount = 0
     let warningCount = 0
@@ -9,9 +8,9 @@ export default class PrintErrorsAndWarningsPlugin {
       let currentTrip
       function formatError(error) {
         const {file, severity, line, text, startColumn, endColumn, message} = error
-        let surveyScan = currentTrip && currentTrip.surveyScan
+        const {surveyScan, tripNum, name} = currentTrip || {}
         return [
-          `${severity}: ${message} (${file}, ${line}:${startColumn}-${endColumn}) ${surveyScan || ''}`,
+          `${severity}: ${message} (${file}, ${line}:${startColumn}-${endColumn}) ${surveyScan || `Trip #${tripNum || '?'}: ${name}`}`,
           text,
           repeat(' ', startColumn) + repeat('^', endColumn - startColumn),
         ].join('\n')

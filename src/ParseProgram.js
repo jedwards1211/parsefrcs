@@ -37,6 +37,8 @@ export default class ParseProgram extends Tapable {
     this.applyPlugins('gotopt', opt)
 
     this.applyPlugins('run')
+    
+    this.applyPlugins('exit')
   }
 
   getResources(dir) {

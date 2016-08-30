@@ -38,7 +38,7 @@ export default class FrcsParser extends Tapable {
     parser.applyPlugins('beforeParseRawSurvey')
 
     var events = new EventEmitter();
-    ['cave', 'trip', 'shot', 'comment'].forEach(function (event) {
+    ['cave', 'trip', 'shot', 'comment', 'error', 'warning'].forEach(function (event) {
       events.on(event, function (val) {
         parser.applyPluginsWaterfall(event, val)
       })

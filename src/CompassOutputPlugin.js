@@ -110,7 +110,6 @@ export default class CompassOutputPlugin {
 
     program.plugin('parser', function (parser) {
       var currentTrip
-      var stationPositions = {}
       var comment
       var cave
       var multicave = program.multiDirectory
@@ -124,11 +123,6 @@ export default class CompassOutputPlugin {
 
       parser.plugin('cave', function (_cave) {
         cave = _cave
-      })
-
-      parser.plugin('calculatedShot', function (shot) {
-        stationPositions[shot.toName] = shot
-        return shot
       })
 
       parser.plugin('beforeRawSurveyFile', function (file) {

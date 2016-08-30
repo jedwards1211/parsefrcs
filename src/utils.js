@@ -38,9 +38,9 @@ export function fixedWidthSplit(line, columnWidths) {
   return result
 }
 
-const intRegex = /^\s*-?\d+$/
-const uintRegex = /^\s*\d+$/
-const ufloatRegex = /^\s*(\d+(\.\d*)?|\.\d+)$/
+const intRegex = /^-?\d+$/
+const uintRegex = /^\d+$/
+const ufloatRegex = /^(\d+(\.\d*)?|\.\d+)$/
 
 export function strictParseInt(s) {
   if (!s.match(intRegex)) throw new Error(`invalid int: '${s}'`)
@@ -72,6 +72,11 @@ export function gradToDeg(grad) {
 
 export function milToDeg(mil) {
   return mil * 18 / 320
+}
+
+export function azmDiff(a, b) {
+  const diff = Math.abs(a - b)
+  return diff > 180 ? 360 - diff : diff
 }
 
 const METERS_TO_FEET = 1 / 0.3048

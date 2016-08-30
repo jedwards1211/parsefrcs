@@ -1,4 +1,5 @@
 import {strictParseInt, parseUint, parseUfloat} from './utils'
+import {trimStart} from 'lodash'
 
 var tripStart = /^ {2}\d | {1}\d{2} |\d{3} |\d{4} /
 
@@ -8,7 +9,7 @@ export function parseFirstLineOfSummary(line) {
   }
 
   try {
-    var tripNum = parseInt(line.substring(0, 4))
+    var tripNum = strictParseInt(line.substring(0, 4).trim())
 
     if (tripNum >= 1000) {
       // There are only 3 columns reserved for the trip number, so when we
@@ -18,7 +19,7 @@ export function parseFirstLineOfSummary(line) {
       line = line.substring(0, 4).concat(line.substring(5))
     }
 
-    var year = strictParseInt(line.substring(11, 14))
+    var year = strictParseInt(line.substring(11, 14).trim())
 
     if (year >= 100) {
       year += 1900
@@ -32,12 +33,12 @@ export function parseFirstLineOfSummary(line) {
 
     return {
       tripNum,
-      date: new Date(year, parseUint(line.substring(5, 7)) - 1, parseUint(line.substring(8, 10))),
-      footage: parseUfloat(line.substring(14, 23)),
-      numShots: parseUfloat(line.substring(24, 28)),
+      date: new Date(year, parseUint(trimStart(line.substring(5, 7))) - 1, parseUint(trimStart(line.substring(8, 10)))),
+      footage: parseUfloat(trimStart(line.substring(14, 23))),
+      numShots: parseUfloat(trimStart(line.substring(24, 28))),
       name: line.substring(30, 111).trim(),
-      excludedFootage: parseUfloat(line.substring(120, 127)),
-      numExcludedShots: parseUint(line.substring(127, 130)),
+      excludedFootage: parseUfloat(trimStart(line.substring(120, 127))),
+      numExcludedShots: parseUint(trimStart(line.substring(127, 130))),
     }
   }
   catch (e) {

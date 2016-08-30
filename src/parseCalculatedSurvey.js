@@ -1,4 +1,5 @@
 import {strictParseInt, parseUint, parseOptUint} from './utils'
+import {trimStart} from 'lodash'
 
 /**
  * Parses data from a calculated survey file.  These look like so:
@@ -25,31 +26,31 @@ export function parseCalculatedShot(line) {
         // name of the to station
         toName: line.substring(0, 6).trim(),
         // whether the shot is a surface measurement
-        surface: line.charAt (6).toLowerCase() === 's',
+        surface: line.charAt(6).toLowerCase() === 's',
         // index of the from station
-        fromNum: parseUint(line.substring(7, 12)),
+        fromNum: parseUint(trimStart(line.substring(7, 12))),
         // index of the to station
-        toNum: parseUint(line.substring(12, 17)),
+        toNum: parseUint(trimStart(line.substring(12, 17))),
         // x position of the to station
-        x: strictParseInt (line.substring(17, 25)) / 100,
+        x: strictParseInt(trimStart(line.substring(17, 25))) / 100,
         // y position of the to station
-        y: strictParseInt (line.substring(25, 33)) / 100,
+        y: strictParseInt(trimStart(line.substring(25, 33))) / 100,
         // z position of the to station
-        z: strictParseInt (line.substring(33, 40)) / 100,
+        z: strictParseInt(trimStart(line.substring(33, 40))) / 100,
         // x offset of the left wall at to station
-        lx: strictParseInt (line.substring(40, 46)) / 100,
+        lx: strictParseInt(trimStart(line.substring(40, 46))) / 100,
         // y offset of the left wall at to station
-        ly: strictParseInt (line.substring(46, 52)) / 100,
+        ly: strictParseInt(trimStart(line.substring(46, 52))) / 100,
         // x offset of the right wall at to station
-        rx: strictParseInt (line.substring(52, 58)) / 100,
+        rx: strictParseInt(trimStart(line.substring(52, 58))) / 100,
         // y offset of the right wall at to station
-        ry: strictParseInt (line.substring(58, 64)) / 100,
+        ry: strictParseInt(trimStart(line.substring(58, 64))) / 100,
         // up at to station
-        u: parseUint(line.substring(64, 68)) / 10,
+        u: parseUint(trimStart(line.substring(64, 68))) / 10,
         // down at to station
-        d: parseUint(line.substring(68, 72)) / 10,
+        d: parseUint(trimStart(line.substring(68, 72))) / 10,
         // trip number
-        tripNum: parseOptUint(line.substring(72, 78))
+        tripNum: parseOptUint(trimStart(line.substring(72, 78)))
       }
     }
     catch (e) {

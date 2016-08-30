@@ -5,6 +5,7 @@ import FindFrcsFilesPlugin from './FindFrcsFilesPlugin'
 import StandardParsePlugin from './StandardParsePlugin'
 import CompassOutputPlugin from './CompassOutputPlugin'
 import DetectMultiDirectoryPlugin from './DetectMultiDirectoryPlugin'
+import ResourceFileGetoptPlugin from './ResourceFileGetoptPlugin'
 import PrintFilesFoundPlugin from './PrintFilesFoundPlugin'
 import AssociateTripSummariesPlugin from './AssociateTripSummariesPlugin'
 
@@ -55,6 +56,7 @@ var program = new ParseProgram({
 program.apply(
   new FindFrcsFilesPlugin(),
   new DetectMultiDirectoryPlugin(),
+  new ResourceFileGetoptPlugin(),
   new PrintFilesFoundPlugin(),
   new StandardParsePlugin(),
   new AssociateTripSummariesPlugin(),

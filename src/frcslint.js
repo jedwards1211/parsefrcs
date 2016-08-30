@@ -5,6 +5,7 @@ import FindFrcsFilesPlugin from './FindFrcsFilesPlugin'
 import StandardParsePlugin from './StandardParsePlugin'
 import DetectMultiDirectoryPlugin from './DetectMultiDirectoryPlugin'
 import PrintFilesFoundPlugin from './PrintFilesFoundPlugin'
+import ResourceFileGetoptPlugin from './ResourceFileGetoptPlugin'
 import AssociateTripSummariesPlugin from './AssociateTripSummariesPlugin'
 import ErrorOutputPlugin from './ErrorOutputPlugin'
 import ErrorCodeGetoptPlugin from './ErrorCodeGetoptPlugin'
@@ -34,6 +35,7 @@ program.apply(
   new DetectMultiDirectoryPlugin(),
   new PrintFilesFoundPlugin(),
   new StandardParsePlugin(),
+  new ResourceFileGetoptPlugin(),
   new AssociateTripSummariesPlugin(),
   new ErrorOutputPlugin(),
   new ErrorCodeGetoptPlugin(),

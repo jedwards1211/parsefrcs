@@ -84,11 +84,9 @@ export default class OldBreakoutOutputPlugin {
         if (trip.backAzmType && trip.backAzmType.toUpperCase() !== 'C') {
           convAzmBs = flowRight(oppositeDeg, convAzmBs)
         }
-        convIncFs = convIncBs = angleConverters[trip.incUnit]
+        convIncFs = convIncBs = angleConverters[trip.incUnit] || angleConverters.d
         if (trip.backIncType && trip.backIncType.toUpperCase() !== 'C') {
-          convIncBs = flowRight(function (a) {
-            return -a
-          }, convIncBs)
+          convIncBs = flowRight(a => -a, convIncBs)
         }
         return trip
       })
@@ -108,6 +106,7 @@ export default class OldBreakoutOutputPlugin {
           (isNaN(incBs) || incBs === null)) {
           incFs = 0
         }
+        if (!convIncFs) console.log(currentTrip)
         var cols = [
           shot.from,
           shot.to,

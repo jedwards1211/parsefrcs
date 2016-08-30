@@ -210,6 +210,12 @@ export default function parseRawSurvey(emitter, file) {
       azmUnit = matches[4]
       incUnit = matches[5]
 
+      if (!/(FT|FI|M )/.test(matches[1])) error('Invalid distance unit', 0, 3)
+      if (!/[CB ]/.test(matches[2].charAt(0))) error('Invalid backsight azimuth type', 3, 4)
+      if (!/[CB ]/.test(matches[3].charAt(0))) error('Invalid backsight inclination type', 4, 5)
+      if (!/[DGM]/.test(matches[4].charAt(0))) error('Invalid azimuth unit', 6, 7)
+      if (!/[DGM]/.test(matches[5].charAt(0))) error('Invalid inclination unit', 7, 8)
+
       tripComment = (tripComment || []).join('\n')
 
       var trip = {

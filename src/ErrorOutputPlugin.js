@@ -1,17 +1,26 @@
 import {repeat} from 'lodash'
 
-function formatError(error) {
-  const {file, severity, line, text, startColumn, endColumn, message} = error
-  return `${severity}: ${message} (${file}, ${line}:${startColumn}-${endColumn})
-${text}
-${repeat(' ', startColumn)}${repeat('^', endColumn - startColumn)}`
-}
 
 export default class PrintErrorsAndWarningsPlugin {
   apply(program) {
     let errorCount = 0
     let warningCount = 0
     program.plugin('parser', parser => {
+      let currentTrip
+      function formatError(error) {
+        const {file, severity, line, text, startColumn, endColumn, message} = error
+        let surveyScan = currentTrip && currentTrip.surveyScan
+        if (surveyScan && basenameOnlySurveyScans) {
+          surveyScan = path.basename(surveyScan)
+        }
+        return [
+          `${severity}: ${message} (${file}, ${line}:${startColumn}-${endColumn}) ${surveyScan || ''}`,
+          text,
+          repeat(' ', startColumn) + repeat('^', endColumn - startColumn),
+        ].join('\n')
+      }
+
+      parser.plugin('trip', trip => currentTrip = trip)
       parser.plugin('error', error => {
         if (error.severity === 'error') {
           errorCount++

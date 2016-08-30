@@ -10,14 +10,17 @@ export default class ResourceFilePlugin {
 
   apply(program) {
     var resourceFileName = this.options.resourceFileName
-    var externalResourceFile = untildify(this.options.externalResourceFile)
+    var externalResourceFile = this.options.externalResourceFile &&
+      path.normalize(path.resolve(untildify(this.options.externalResourceFile)))
 
     var externalResources
 
     if (externalResourceFile) {
-      if (!path.isAbsolute(externalResourceFile)) externalResourceFile = path.join(process.cwd(), externalResourceFile)
       try {
-        externalResources = JSON.parse(fs.readFileSync(externalResourceFile, 'utf8')) || {}
+        externalResources = _.mapKeys(
+          JSON.parse(fs.readFileSync(externalResourceFile, 'utf8')) || {},
+          (value, dir) => path.normalize(path.resolve(untildify(dir)))
+        )
       } catch (e) {
         console.error('invalid JSON syntax in resource file: ' + externalResourceFile)
         console.error(e)
@@ -34,9 +37,7 @@ export default class ResourceFilePlugin {
       if (!resources) {
         this.resources[dir] = resources = {}
         for (var extDir in externalResources) {
-          var normExtDir = extDir
-          if (!path.isAbsolute(extDir)) normExtDir = path.join(path.dirname(externalResourceFile), extDir)
-          if (path.normalize(dir).startsWith(path.normalize(normExtDir))) _.assign(resources, externalResources[extDir])
+          if (path.normalize(dir).startsWith(extDir)) _.assign(resources, externalResources[extDir])
         }
 
         if (resourceFileName) {

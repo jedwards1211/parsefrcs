@@ -10,9 +10,6 @@ export default class PrintErrorsAndWarningsPlugin {
       function formatError(error) {
         const {file, severity, line, text, startColumn, endColumn, message} = error
         let surveyScan = currentTrip && currentTrip.surveyScan
-        if (surveyScan && basenameOnlySurveyScans) {
-          surveyScan = path.basename(surveyScan)
-        }
         return [
           `${severity}: ${message} (${file}, ${line}:${startColumn}-${endColumn}) ${surveyScan || ''}`,
           text,

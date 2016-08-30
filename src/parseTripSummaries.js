@@ -8,7 +8,7 @@ export function parseFirstLineOfSummary(line) {
   }
 
   try {
-    var tripNum = strictParseInt(line.substring(0, 4))
+    var tripNum = parseInt(line.substring(0, 4))
 
     if (tripNum >= 1000) {
       // There are only 3 columns reserved for the trip number, so when we

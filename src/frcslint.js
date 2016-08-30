@@ -2,6 +2,7 @@
 
 import ParseProgram from './ParseProgram'
 import FindFrcsFilesPlugin from './FindFrcsFilesPlugin'
+import FindSurveyScansPlugin from './FindSurveyScansPlugin'
 import StandardParsePlugin from './StandardParsePlugin'
 import DetectMultiDirectoryPlugin from './DetectMultiDirectoryPlugin'
 import PrintFilesFoundPlugin from './PrintFilesFoundPlugin'
@@ -36,6 +37,7 @@ program.apply(
   new PrintFilesFoundPlugin(),
   new StandardParsePlugin(),
   new ResourceFileGetoptPlugin(),
+  new FindSurveyScansPlugin(),
   new AssociateTripSummariesPlugin(),
   new ErrorOutputPlugin(),
   new ErrorCodeGetoptPlugin(),

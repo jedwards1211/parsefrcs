@@ -43,12 +43,12 @@ const uintRegex = /^\s*\d+$/
 const ufloatRegex = /^\s*(\d+(\.\d*)?|\.\d+)$/
 
 export function strictParseInt(s) {
-  if (!s.match(intRegex)) throw new Error('invalid int: ' + s)
+  if (!s.match(intRegex)) throw new Error(`invalid int: '${s}'`)
   return parseInt(s)
 }
 
 export function parseUint(s) {
-  if (!s.match(uintRegex)) throw new Error('invalid uint: ' + s)
+  if (!s.match(uintRegex)) throw new Error(`invalid uint: '${s}'`)
   return strictParseInt(s)
 }
 
@@ -58,7 +58,7 @@ export function parseOptUint(s) {
 }
 
 export function parseUfloat(s) {
-  if (!s.match(ufloatRegex)) throw new Error('invalid ufloat: ' + s)
+  if (!s.match(ufloatRegex)) throw new Error(`invalid ufloat: '${s}'`)
   return parseFloat(s)
 }
 

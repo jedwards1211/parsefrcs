@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import untildify from 'untildify'
 
 export default class FindSurveyScansPlugin {
   constructor(options = {}) {
@@ -16,7 +17,7 @@ export default class FindSurveyScansPlugin {
         scans = []
         var resources = program.getResources(path.dirname(file))
 
-        var scanDir = resources.surveyScanDir || surveyScanDir
+        var scanDir = untildify(resources.surveyScanDir || surveyScanDir)
         if (!path.isAbsolute(scanDir)) {
           scanDir = path.join(path.dirname(file), scanDir)
         }

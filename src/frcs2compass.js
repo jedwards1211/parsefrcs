@@ -8,6 +8,7 @@ import DetectMultiDirectoryPlugin from './DetectMultiDirectoryPlugin'
 import ResourceFileGetoptPlugin from './ResourceFileGetoptPlugin'
 import PrintFilesFoundPlugin from './PrintFilesFoundPlugin'
 import AssociateTripSummariesPlugin from './AssociateTripSummariesPlugin'
+import UntildifyArgvPlugin from './UntildifyArgvPlugin'
 
 var program = new ParseProgram({
   getopt: {
@@ -54,6 +55,7 @@ var program = new ParseProgram({
 })
 
 program.apply(
+  new UntildifyArgvPlugin(),
   new FindFrcsFilesPlugin(),
   new DetectMultiDirectoryPlugin(),
   new ResourceFileGetoptPlugin(),

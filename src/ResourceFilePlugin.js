@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import _ from 'lodash'
+import untildify from 'untildify'
 
 export default class ResourceFilePlugin {
   constructor(options = {}) {
@@ -8,12 +9,13 @@ export default class ResourceFilePlugin {
   }
 
   apply(program) {
-    var resourceFileName = this.options.resourceFileName || '.parsefrcsrc'
-    var externalResourceFile = this.options.externalResourceFile
+    var resourceFileName = this.options.resourceFileName
+    var externalResourceFile = untildify(this.options.externalResourceFile)
 
     var externalResources
 
     if (externalResourceFile) {
+      if (!path.isAbsolute(externalResourceFile)) externalResourceFile = path.join(process.cwd(), externalResourceFile)
       try {
         externalResources = JSON.parse(fs.readFileSync(externalResourceFile, 'utf8')) || {}
       } catch (e) {
@@ -37,14 +39,16 @@ export default class ResourceFilePlugin {
           if (path.normalize(dir).startsWith(path.normalize(normExtDir))) _.assign(resources, externalResources[extDir])
         }
 
-        var resourceFile = path.join(dir, resourceFileName)
-        if (fs.existsSync(resourceFile) && fs.statSync(resourceFile).isFile()) {
-          try {
-            _.assign(resources, JSON.parse(fs.readFileSync(resourceFile, 'utf8')))
-          }
-          catch (e) {
-            console.error('invalid JSON syntax in resource file: ' + resourceFile)
-            console.error(e)
+        if (resourceFileName) {
+          var resourceFile = path.join(dir, resourceFileName)
+          if (fs.existsSync(resourceFile) && fs.statSync(resourceFile).isFile()) {
+            try {
+              _.assign(resources, JSON.parse(fs.readFileSync(resourceFile, 'utf8')))
+            }
+            catch (e) {
+              console.error('invalid JSON syntax in resource file: ' + resourceFile)
+              console.error(e)
+            }
           }
         }
       }

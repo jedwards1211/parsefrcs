@@ -11,6 +11,7 @@ import WallsOutputGetoptPlugin from './WallsOutputGetoptPlugin'
 import DetectMultiDirectoryPlugin from './DetectMultiDirectoryPlugin'
 import PrintFilesFoundPlugin from './PrintFilesFoundPlugin'
 import AssociateTripSummariesPlugin from './AssociateTripSummariesPlugin'
+import UntildifyArgvPlugin from './UntildifyArgvPlugin'
 
 var program = new ParseProgram({
   getopt: {
@@ -29,6 +30,7 @@ var program = new ParseProgram({
 })
 
 program.apply(
+  new UntildifyArgvPlugin(),
   new ResourceFileGetoptPlugin(),
   new FindFrcsFilesPlugin(),
   new DetectMultiDirectoryPlugin(),

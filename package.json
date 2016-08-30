@@ -53,6 +53,7 @@
     "line-reader": "github:jedwards1211/line-reader#sync-line-reader",
     "lodash": "^4.15.0",
     "node-getopt": "^0.2.3",
-    "tapable": "^0.2.4"
+    "tapable": "^0.2.4",
+    "untildify": "^3.0.2"
   }
 }

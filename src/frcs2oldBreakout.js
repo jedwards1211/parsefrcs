@@ -12,6 +12,7 @@ import DetectMultiDirectoryPlugin from './DetectMultiDirectoryPlugin'
 import FindSurveyScansPlugin from './FindSurveyScansPlugin'
 import PrintFilesFoundPlugin from './PrintFilesFoundPlugin'
 import AssociateTripSummariesPlugin from './AssociateTripSummariesPlugin'
+import UntildifyArgvPlugin from './UntildifyArgvPlugin'
 
 var program = new ParseProgram({
   getopt: {
@@ -30,6 +31,7 @@ var program = new ParseProgram({
 })
 
 program.apply(
+  new UntildifyArgvPlugin(),
   new ResourceFileGetoptPlugin(),
   new DetectMultiDirectoryPlugin(),
   new FindFrcsFilesPlugin(),

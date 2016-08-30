@@ -11,6 +11,7 @@ import AssociateTripSummariesPlugin from './AssociateTripSummariesPlugin'
 import ErrorOutputPlugin from './ErrorOutputPlugin'
 import ErrorCodeGetoptPlugin from './ErrorCodeGetoptPlugin'
 import CheckBacksightsGetoptPlugin from './CheckBacksightsGetoptPlugin'
+import UntildifyArgvPlugin from './UntildifyArgvPlugin'
 
 var program = new ParseProgram({
   getopt: {
@@ -32,6 +33,7 @@ var program = new ParseProgram({
 })
 
 program.apply(
+  new UntildifyArgvPlugin(),
   new FindFrcsFilesPlugin(),
   new DetectMultiDirectoryPlugin(),
   new PrintFilesFoundPlugin(),

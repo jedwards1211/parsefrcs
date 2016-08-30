@@ -7,10 +7,9 @@ export default class ErrorCodePlugin {
     let warningCount = 0
     program.plugin('parser', parser => {
       parser.plugin('error', error => {
-        errorCount++
-      })
-      parser.plugin('warning', warning => {
-        warningCount++
+        if (error.severity === 'error') errorCount++
+        else warningCount++
+        return error
       })
     })
     program.plugin('exit', () => {

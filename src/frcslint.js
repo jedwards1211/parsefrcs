@@ -8,6 +8,7 @@ import PrintFilesFoundPlugin from './PrintFilesFoundPlugin'
 import AssociateTripSummariesPlugin from './AssociateTripSummariesPlugin'
 import ErrorOutputPlugin from './ErrorOutputPlugin'
 import ErrorCodeGetoptPlugin from './ErrorCodeGetoptPlugin'
+import CheckBacksightsGetoptPlugin from './CheckBacksightsGetoptPlugin'
 
 var program = new ParseProgram({
   getopt: {
@@ -36,6 +37,7 @@ program.apply(
   new AssociateTripSummariesPlugin(),
   new ErrorOutputPlugin(),
   new ErrorCodeGetoptPlugin(),
+  new CheckBacksightsGetoptPlugin(),
 )
 
 program.run()

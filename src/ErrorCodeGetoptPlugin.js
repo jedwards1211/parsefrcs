@@ -9,7 +9,7 @@ export default class ErrorCodeGetoptPlugin {
     })
 
     program.plugin('gotopt', function (opt) {
-      const {werror} = opt
+      const {werror} = opt.options
       program.apply(new ErrorCodePlugin({werror}))
     })
   }

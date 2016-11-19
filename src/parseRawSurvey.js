@@ -129,6 +129,7 @@ export default function parseRawSurvey(emitter, file) {
   }
 
   var lineNumber = 0
+  var cave
 
   return function parseRawSurveyLine(line) {
     let errored = false
@@ -156,7 +157,7 @@ export default function parseRawSurvey(emitter, file) {
     if (lineNumber === 1) {
       var match = /^\s*([^,]+)(,(.*))?/.exec(line)
       if (match) {
-        var cave = {
+        cave = {
           name: match[1].trim(),
         }
         if (match[3]) {
@@ -222,6 +223,7 @@ export default function parseRawSurvey(emitter, file) {
         file,
         startLine: tripCommentStartLine,
         endLine: tripCommentEndLine,
+        cave,
         name: tripName,
         distUnit,
         backAzmType,

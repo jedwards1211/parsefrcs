@@ -148,12 +148,7 @@ export default class BreakoutOutputPlugin {
             survey.push(fromStation)
           }
           // add lruds to from station
-          if (!fromStation.lrud && (
-              Number.isFinite(shot.l) ||
-              Number.isFinite(shot.r) ||
-              Number.isFinite(shot.u) ||
-              Number.isFinite(shot.d)
-            )) {
+          if (!fromStation.lrud) {
             fromStation.lrud = [
               formatLrud(shot.l),
               formatLrud(shot.r),
@@ -182,19 +177,25 @@ export default class BreakoutOutputPlugin {
           }
         }
 
+        let {incFs, incBs, azmFs, azmBs} = shot
+        if (!Number.isFinite(incFs) || !Number.isFinite(incBs)) {
+          if (Number.isFinite(azmFs)) incFs = 0
+          else if (Number.isFinite(azmBs)) incBs = 0
+        }
+
         if (measurements) {
           // add frontsights
           const frontsight: ShotMeasurement = {dir: 'fs'}
           if (Number.isFinite(shot.dist)) frontsight.dist = shot.dist.toFixed(2)
           if (Number.isFinite(shot.azmFs)) frontsight.azm = shot.azmFs.toFixed(2)
-          if (Number.isFinite(shot.incFs)) frontsight.inc = shot.incFs.toFixed(2)
+          if (Number.isFinite(incFs)) frontsight.inc = incFs.toFixed(2)
           measurements.push(frontsight)
 
           // add backsights
           if (Number.isFinite(shot.azmBs) || Number.isFinite(shot.incBs)) {
             const backsight: ShotMeasurement = {dir: 'bs'}
             if (Number.isFinite(shot.azmBs)) backsight.azm = shot.azmBs.toFixed(2)
-            if (Number.isFinite(shot.incBs)) backsight.inc = shot.incBs.toFixed(2)
+            if (Number.isFinite(incBs)) backsight.inc = incBs.toFixed(2)
             measurements.push(backsight)
           }
         }

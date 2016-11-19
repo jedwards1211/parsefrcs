@@ -193,8 +193,8 @@ export default class BreakoutOutputPlugin {
           // add backsights
           if (Number.isFinite(shot.azmBs) || Number.isFinite(shot.incBs)) {
             const backsight: ShotMeasurement = {dir: 'bs'}
-            if (Number.isFinite(shot.azmBs)) frontsight.azm = shot.azmBs.toFixed(2)
-            if (Number.isFinite(shot.incBs)) frontsight.inc = shot.incBs.toFixed(2)
+            if (Number.isFinite(shot.azmBs)) backsight.azm = shot.azmBs.toFixed(2)
+            if (Number.isFinite(shot.incBs)) backsight.inc = shot.incBs.toFixed(2)
             measurements.push(backsight)
           }
         }

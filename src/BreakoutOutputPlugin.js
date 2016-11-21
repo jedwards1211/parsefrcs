@@ -147,33 +147,41 @@ export default class BreakoutOutputPlugin {
             }: Station)
             survey.push(fromStation)
           }
-          // add lruds to from station
-          if (!fromStation.lrud) {
-            fromStation.lrud = [
-              formatLrud(shot.l),
-              formatLrud(shot.r),
-              formatLrud(shot.u),
-              formatLrud(shot.d),
-            ]
-          }
-          // add nev to station
-          const pos = stationPositions[fromStation.station]
-          if (!fromStation.nev && pos) {
-            (fromStation: Object).nev = [
-              formatLrud(pos.y),
-              formatLrud(pos.x),
-              formatLrud(pos.z),
-            ]
-          }
+
+          let toStation: ?Station
 
           if (shot.to) {
             // insert shot
             measurements = []
             survey.push(({measurements}: Shot))
             // insert to station
-            survey.push(({station: shot.to}: Station))
+            toStation = ({station: shot.to}: Station)
+            survey.push(toStation)
+
+            // add lruds to to station
+            if (!toStation.lrud) {
+              toStation.lrud = [
+                formatLrud(shot.l),
+                formatLrud(shot.r),
+                formatLrud(shot.u),
+                formatLrud(shot.d),
+              ]
+            }
           } else {
             measurements = (fromStation.splays || (fromStation.splays = []): any)
+          }
+
+          // add nev to stations
+          for (let station of [fromStation, toStation]) {
+            if (!station) continue
+            const pos = stationPositions[station.station]
+            if (!station.nev && pos) {
+              (station: Object).nev = [
+                formatLrud(pos.y),
+                formatLrud(pos.x),
+                formatLrud(pos.z),
+              ]
+            }
           }
         }
 

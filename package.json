@@ -1,6 +1,6 @@
 {
   "name": "parsefrcs",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Parses FRCS cave survey data and converts to other formats",
   "main": "frcs2walls.js",
   "bin": {
@@ -44,7 +44,6 @@
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-flow": "^1.0.0",
     "babel-preset-stage-1": "^6.13.0",
-    "babel-runtime": "^6.11.6",
     "chai": "^3.5.0",
     "eslint": "^3.4.0",
     "eslint-config-andy": "github:jedwards1211/eslint-config-andy#2.0.0-beta7",
@@ -61,6 +60,7 @@
     "wr": "^1.3.1"
   },
   "dependencies": {
+    "babel-runtime": "^6.11.6",
     "line-reader": "github:jedwards1211/line-reader#sync-line-reader",
     "lodash": "^4.15.0",
     "node-getopt": "^0.2.3",

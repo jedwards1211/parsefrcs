@@ -1,12 +1,13 @@
 {
   "name": "parsefrcs",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Parses FRCS cave survey data and converts to other formats",
   "main": "frcs2walls.js",
   "bin": {
     "frcs2walls": "./lib/frcs2walls.js",
     "frcs2compass": "./lib/frcs2compass.js",
-    "frcs2breakout": "./lib/frcs2breakout.js"
+    "frcs2breakout": "./lib/frcs2breakout.js",
+    "frcslint": "./lib/frcslint.js"
   },
   "scripts": {
     "lint": "eslint src test",

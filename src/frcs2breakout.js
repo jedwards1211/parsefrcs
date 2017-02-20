@@ -1,4 +1,3 @@
-#!/usr/bin/env babel-node
 // @flow
 
 import ParseProgram from './ParseProgram'

@@ -1,5 +1,3 @@
-#!/usr/bin/env babel-node
-
 import ParseProgram from './ParseProgram'
 import FindFrcsFilesPlugin from './FindFrcsFilesPlugin'
 import FindSurveyScansPlugin from './FindSurveyScansPlugin'

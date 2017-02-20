@@ -1,6 +1,6 @@
 {
   "name": "parsefrcs",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Parses FRCS cave survey data and converts to other formats",
   "main": "frcs2walls.js",
   "bin": {
@@ -37,7 +37,6 @@
   },
   "homepage": "https://github.com/jedwards1211/parsefrcs#readme",
   "devDependencies": {
-    "babel-cli": "^6.14.0",
     "babel-core": "^6.14.0",
     "babel-eslint": "^7.1.1",
     "babel-plugin-transform-runtime": "^6.12.0",

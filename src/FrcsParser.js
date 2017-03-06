@@ -12,6 +12,10 @@ export default class FrcsParser extends Tapable {
     this.files = files
   }
 
+  error(error) {
+    this.applyPluginsBailResult('error', error)
+  }
+
   parseTripSummaries() {
     var parser = this
 
@@ -37,10 +41,15 @@ export default class FrcsParser extends Tapable {
 
     parser.applyPlugins('beforeParseRawSurvey')
 
-    var events = new EventEmitter();
-    ['cave', 'trip', 'shot', 'comment', 'error', 'warning'].forEach(function (event) {
+    var events = new EventEmitter()
+    ;['cave', 'trip', 'shot', 'comment'].forEach(function (event) {
       events.on(event, function (val) {
         parser.applyPluginsWaterfall(event, val)
+      })
+    })
+    ;['error', 'warning'].forEach(function (event) {
+      events.on(event, function (val) {
+        parser.applyPluginsBailResult(event, val)
       })
     })
 

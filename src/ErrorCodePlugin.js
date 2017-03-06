@@ -9,7 +9,6 @@ export default class ErrorCodePlugin {
       parser.plugin('error', error => {
         if (error.severity === 'error') errorCount++
         else warningCount++
-        return error
       })
     })
     program.plugin('exit', () => {

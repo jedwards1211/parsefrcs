@@ -195,10 +195,18 @@ export default function parseRawSurvey(emitter, file) {
         blockCommentStartLine = lineNumber
       }
       else if (lineNumber === blockCommentStartLine + 1 && line.length > 1) {
-        emitter.emit('comment', line.substring(1).trim())
+        emitter.emit('comment', {
+          file,
+          line: lineNumber,
+          text: line.substring(1).trim(),
+        })
       }
     } else if (inBlockComment) {
-      emitter.emit('comment', line.trim())
+      emitter.emit('comment', {
+        file,
+        line: lineNumber,
+        text: line.trim(),
+      })
     } else if (lineNumber === tripCommentEndLine + 1) {
       var matches = rawHeaderRegex.exec(line)
       distUnit = matches[1]

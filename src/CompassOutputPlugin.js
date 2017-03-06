@@ -155,7 +155,7 @@ export default class CompassOutputPlugin {
 
         return trip
       })
-      parser.plugin('comment', function (_comment) {
+      parser.plugin('comment', function ({text: _comment}) {
         if (comment) {
           comment += '\t' + _comment
         }

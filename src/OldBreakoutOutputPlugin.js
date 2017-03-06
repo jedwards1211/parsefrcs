@@ -90,7 +90,7 @@ export default class OldBreakoutOutputPlugin {
         }
         return trip
       })
-      parser.plugin('comment', function (_comment) {
+      parser.plugin('comment', function ({text: _comment}) {
         comment = _comment
         return _comment
       })

@@ -199,7 +199,7 @@ export default class WallsOutputPlugin {
         }
         out('\r\n')
       })
-      parser.plugin('comment', function (comment) {
+      parser.plugin('comment', function ({text: comment}) {
         out(';' + comment + '\r\n')
       })
       parser.plugin('shot', function (shot) {

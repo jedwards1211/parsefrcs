@@ -7,6 +7,7 @@ import DetectMultiDirectoryPlugin from './DetectMultiDirectoryPlugin'
 import PrintFilesFoundPlugin from './PrintFilesFoundPlugin'
 import ResourceFileGetoptPlugin from './ResourceFileGetoptPlugin'
 import AssociateTripSummariesPlugin from './AssociateTripSummariesPlugin'
+import ErrorSuppressingCommentsPlugin from './ErrorSuppressingCommentsPlugin'
 import ErrorOutputPlugin from './ErrorOutputPlugin'
 import ErrorCodeGetoptPlugin from './ErrorCodeGetoptPlugin'
 import CheckBacksightsGetoptPlugin from './CheckBacksightsGetoptPlugin'
@@ -40,6 +41,7 @@ program.apply(
   new ResourceFileGetoptPlugin(),
   new FindSurveyScansPlugin(),
   new AssociateTripSummariesPlugin(),
+  new ErrorSuppressingCommentsPlugin(),
   new ErrorOutputPlugin(),
   new ErrorCodeGetoptPlugin(),
   new CheckBacksightsGetoptPlugin(),

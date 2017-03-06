@@ -1,4 +1,4 @@
-import {padEnd} from 'lodash'
+import {padEnd, repeat} from 'lodash'
 import chalk from 'chalk'
 
 export default class ErrorOutputPlugin {
@@ -13,10 +13,14 @@ export default class ErrorOutputPlugin {
         const {severity, line, text, startColumn, endColumn, message, type} = error
         const coloredSeverity = severity === 'error' ? chalk.red.bold('error  ') : chalk.yellow.bold('warning')
 
-        return [
+        const result = [
           `    ${chalk.bold(line)}: ${coloredSeverity}  ${padEnd(message, 50)}  ${chalk.gray(type)}`,
           `      ${text.substring(0, startColumn)}${chalk[severity === 'error' ? 'bgRed' : 'bgYellow'].bold(text.substring(startColumn, endColumn))}${text.substring(endColumn)}`,
-        ].join('\n')
+        ]
+        if (process.env.CI) result.push(
+          `      ${repeat(' ', startColumn)}${repeat('^', endColumn - startColumn)}`,
+        )
+        return result.join('\n')
       }
 
       parser.plugin('trip', trip => currentTrip = trip)

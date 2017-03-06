@@ -370,6 +370,7 @@ export default function parseRawSurvey(emitter, file) {
         shot.vertDist = shot.incFs
         shot.incFs = Math.asin(shot.incFs / shot.dist)
       }
+      else shot.flag = null
 
       if (shot.flag === 'H' || shot.flag === 'D') {
         switch (incUnit) {

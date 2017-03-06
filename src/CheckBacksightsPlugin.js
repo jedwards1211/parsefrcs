@@ -36,7 +36,7 @@ export default class CheckBacksightsPlugin {
       parser.plugin('shot', shot => {
         const incFs = convIncFs(shot.incFs)
         const incBs = convIncBs(shot.incBs)
-        if (Number.isFinite(incFs) && Number.isFinite(incBs)) {
+        if (!shot.flag && Number.isFinite(incFs) && Number.isFinite(incBs)) {
           const diff = Math.abs(incFs - incBs)
           if (diff > warnDiff) {
             const {file, line, text} = shot
@@ -52,7 +52,7 @@ export default class CheckBacksightsPlugin {
             })
           }
         }
-        const isVertical = (Math.abs(incFs) === 90 || Math.abs(incBs) === 90) &&
+        const isVertical = !shot.flag && (Math.abs(incFs) === 90 || Math.abs(incBs) === 90) &&
           (incFs === incBs || (Number.isFinite(incFs) ^ Number.isFinite((incBs))))
         if (!isVertical && Number.isFinite(shot.azmFs) && Number.isFinite(shot.azmBs)) {
           const diff = azmDiff(convAzmFs(shot.azmFs), convAzmBs(shot.azmBs))

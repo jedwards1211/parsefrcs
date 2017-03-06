@@ -34,33 +34,39 @@ export default class CheckBacksightsPlugin {
         return trip
       })
       parser.plugin('shot', shot => {
-        if (Number.isFinite(shot.azmFs) && Number.isFinite(shot.azmBs)) {
-          const diff = azmDiff(convAzmFs(shot.azmFs), convAzmBs(shot.azmBs))
+        const incFs = convIncFs(shot.incFs)
+        const incBs = convIncBs(shot.incBs)
+        if (Number.isFinite(incFs) && Number.isFinite(incBs)) {
+          const diff = Math.abs(incFs - incBs)
           if (diff > warnDiff) {
             const {file, line, text} = shot
-            parser.applyPluginsWaterfall('error', {
-              severity: diff > errorDiff ? 'error' : 'warning',
-              file,
-              line,
-              text,
-              startColumn: 19,
-              endColumn: 30,
-              message: `Frontsight and ${currentTrip.azmCorrected ? '' : 'un'}corrected backsight azimuth differ by ${diff.toFixed(1)}°`
-            })
-          }
-        }
-        if (Number.isFinite(shot.incFs) && Number.isFinite(shot.incBs)) {
-          const diff = Math.abs(convIncFs(shot.incFs) - convIncBs(shot.incBs))
-          if (diff > warnDiff) {
-            const {file, line, text} = shot
-            parser.applyPluginsWaterfall('error', {
+            parser.error({
               severity: diff > errorDiff ? 'error' : 'warning',
               file,
               line,
               text,
               startColumn: 30,
               endColumn: 40,
+              type: 'bs-inc-agreement',
               message: `Frontsight and ${currentTrip.incCorrected ? '' : 'un'}corrected backsight inclination differ by ${diff.toFixed(1)}°`
+            })
+          }
+        }
+        const isVertical = (Math.abs(incFs) === 90 || Math.abs(incBs) === 90) &&
+          (incFs === incBs || (Number.isFinite(incFs) ^ Number.isFinite((incBs))))
+        if (!isVertical && Number.isFinite(shot.azmFs) && Number.isFinite(shot.azmBs)) {
+          const diff = azmDiff(convAzmFs(shot.azmFs), convAzmBs(shot.azmBs))
+          if (diff > warnDiff) {
+            const {file, line, text} = shot
+            parser.error({
+              severity: diff > errorDiff ? 'error' : 'warning',
+              file,
+              line,
+              text,
+              startColumn: 19,
+              endColumn: 30,
+              type: 'bs-azm-agreement',
+              message: `Frontsight and ${currentTrip.azmCorrected ? '' : 'un'}corrected backsight azimuth differ by ${diff.toFixed(1)}°`
             })
           }
         }

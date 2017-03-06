@@ -1,6 +1,6 @@
 {
   "name": "parsefrcs",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "description": "Parses FRCS cave survey data and converts to other formats",
   "main": "frcs2walls.js",
   "bin": {

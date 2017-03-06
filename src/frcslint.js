@@ -10,7 +10,7 @@ import AssociateTripSummariesPlugin from './AssociateTripSummariesPlugin'
 import ErrorSuppressingCommentsPlugin from './ErrorSuppressingCommentsPlugin'
 import ErrorOutputPlugin from './ErrorOutputPlugin'
 import ErrorCodeGetoptPlugin from './ErrorCodeGetoptPlugin'
-import CheckBacksightsGetoptPlugin from './CheckBacksightsGetoptPlugin'
+import BacksightMismatchErrorsGetoptPlugin from './BacksightMismatchErrorsGetoptPlugin'
 import UntildifyArgvPlugin from './UntildifyArgvPlugin'
 
 var program = new ParseProgram({
@@ -44,7 +44,7 @@ program.apply(
   new ErrorSuppressingCommentsPlugin(),
   new ErrorOutputPlugin(),
   new ErrorCodeGetoptPlugin(),
-  new CheckBacksightsGetoptPlugin(),
+  new BacksightMismatchErrorsGetoptPlugin(),
 )
 
 program.run()

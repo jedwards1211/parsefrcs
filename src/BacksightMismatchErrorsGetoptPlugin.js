@@ -1,4 +1,4 @@
-import CheckBacksightsPlugin from './CheckBacksightsPlugin'
+import BacksightMismatchErrorsPlugin from './BacksightMismatchErrorsPlugin'
 
 const DEFAULT_WARN_DIFF = 2
 const DEFAULT_ERROR_DIFF = 10
@@ -13,7 +13,7 @@ export default class CheckBacksightsGetoptPlugin {
     })
 
     program.plugin('gotopt', function (opt) {
-      program.apply(new CheckBacksightsPlugin({
+      program.apply(new BacksightMismatchErrorsPlugin({
         warnDiff: Number(opt.options['warn-bs-diff']) || DEFAULT_WARN_DIFF,
         errorDiff: Number(opt.options['error-bs-diff']) || DEFAULT_ERROR_DIFF,
       }))

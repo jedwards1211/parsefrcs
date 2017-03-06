@@ -47,7 +47,7 @@ export default class CheckBacksightsPlugin {
               text,
               startColumn: 30,
               endColumn: 40,
-              type: 'bs-inc-agreement',
+              type: 'bs-inclination-mismatch',
               message: `Frontsight and ${currentTrip.incCorrected ? '' : 'un'}corrected backsight inclination differ by ${diff.toFixed(1)}°`
             })
           }
@@ -65,7 +65,7 @@ export default class CheckBacksightsPlugin {
               text,
               startColumn: 19,
               endColumn: 30,
-              type: 'bs-azm-agreement',
+              type: 'bs-azimuth-mismatch',
               message: `Frontsight and ${currentTrip.azmCorrected ? '' : 'un'}corrected backsight azimuth differ by ${diff.toFixed(1)}°`
             })
           }

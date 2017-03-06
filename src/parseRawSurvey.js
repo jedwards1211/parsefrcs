@@ -119,10 +119,6 @@ export default function parseRawSurvey(emitter, file) {
   function isValidUFloat(s) {
     return s.match(/^\s*([0-9]+(\.[0-9]*)?|\.[0-9]+)\s*$/)
   }
-  // determines if a cell contains a valid float or whitespace.
-  function isValidOptFloat(s) {
-    return s.match(/^\s*-?[0-9]*(\.[0-9]*)?\s*$/)
-  }
   // determines if a cell contains a valid inclination or whitespace.
   function isValidOptInclination(s) {
     return s.match(/^\s*[-+]?[0-9]*(\.[0-9]*)?\s*$/)
@@ -133,22 +129,27 @@ export default function parseRawSurvey(emitter, file) {
 
   return function parseRawSurveyLine(line) {
     let errored = false
-    function error(message, startColumn, endColumn) {
+    function error(type, message, startColumn, endColumn, severity = 'error') {
       errored = true
       emitter.emit('error', {
         file,
         line: lineNumber,
         text: line,
-        severity: 'error',
+        severity,
         startColumn,
         endColumn,
+        type,
         message
       })
     }
 
     function validate(startColumn, endColumn, fieldName, validator) {
       const field = line.substring(startColumn, endColumn)
-      if (!validator(field)) error((field.trim() ? 'Invalid ' : 'Missing ') + fieldName, startColumn, endColumn)
+      if (!validator(field)) error(
+        `${field.trim() ? 'invalid' : 'missing'}-${fieldName.replace(/\s+/g, '-')}`,
+        (field.trim() ? 'Invalid ' : 'Missing ') + fieldName,
+        startColumn, endColumn
+      )
       return field
     }
 
@@ -219,11 +220,11 @@ export default function parseRawSurvey(emitter, file) {
       azmUnit = matches[4]
       incUnit = matches[5]
 
-      if (!/(FT|FI|M )/.test(matches[1])) error('Invalid distance unit', 0, 3)
-      if (!/[CB ]/.test(matches[2].charAt(0))) error('Invalid backsight azimuth type', 3, 4)
-      if (!/[CB ]/.test(matches[3].charAt(0))) error('Invalid backsight inclination type', 4, 5)
-      if (!/[DGM]/.test(matches[4].charAt(0))) error('Invalid azimuth unit', 6, 7)
-      if (!/[DGM]/.test(matches[5].charAt(0))) error('Invalid inclination unit', 7, 8)
+      if (!/(FT|FI|M )/.test(matches[1])) error('invalid-distance-unit', 'Invalid distance unit', 0, 3)
+      if (!/[CB ]/.test(matches[2].charAt(0))) error('invalid-bs-azimuth-type', 'Invalid backsight azimuth type', 3, 4)
+      if (!/[CB ]/.test(matches[3].charAt(0))) error('invalid-bs-inclination-type', 'Invalid backsight inclination type', 4, 5)
+      if (!/[DGM]/.test(matches[4].charAt(0))) error('invalid-azimuth-unit', 'Invalid azimuth unit', 6, 7)
+      if (!/[DGM]/.test(matches[5].charAt(0))) error('invalid-inclination-unit', 'Invalid inclination unit', 7, 8)
 
       tripComment = (tripComment || []).join('\n')
 
@@ -257,7 +258,7 @@ export default function parseRawSurvey(emitter, file) {
       // to station name
       var toStr = line.substring(0, 5)
       if (!toStr.trim()) return
-      if (!isValidStation(toStr)) error('Invalid station name', 0, 5)
+      if (!isValidStation(toStr)) error('invalid-station-name', 'Invalid station name', 0, 5)
 
       // from station name
       var fromStr = validate(5, 10, 'from station', isValidStation)
@@ -269,7 +270,12 @@ export default function parseRawSurvey(emitter, file) {
         inchesStr = line.substring(14, 17)
         // feet and inches are not both optional
         if (!isValidUInt(feetStr) && !isValidUInt(inchesStr)) {
-          error(feetStr.trim() || inchesStr.trim() ? 'Invalid distance' : 'Missing distance', 10, 17)
+          const invalid = feetStr.trim() || inchesStr.trim()
+          error(
+            invalid ? 'invalid-distance' : 'missing-distance',
+            invalid ? 'Invalid distance' : 'Missing distance',
+            10, 17
+          )
         }
       } else {
         // decimal feet are not optional
@@ -292,16 +298,24 @@ export default function parseRawSurvey(emitter, file) {
       // Yes, sadly I have found negative LRUD values in Chip's format and apparently
       // his program doesn't fail on them, so I have to accept them here
       // isValidOptFloat instead of isValidOptUFloat
-      var lStr = validate(40, 43, 'distance', isValidOptFloat)
+      var lStr = validate(40, 43, 'left', isValidOptUFloat)
 
       // right
-      var rStr = validate(43, 46, 'distance', isValidOptFloat)
+      var rStr = validate(43, 46, 'right', isValidOptUFloat)
 
       // up
-      var uStr = validate(46, 49, 'distance', isValidOptFloat)
+      var uStr = validate(46, 49, 'up', isValidOptUFloat)
 
       // down
-      var dStr = validate(49, 52, 'distance', isValidOptFloat)
+      var dStr = validate(49, 52, 'down', isValidOptUFloat)
+
+      // warn if some but not all LRUDs are missing
+      if (lStr.trim() || rStr.trim() || uStr.trim() || dStr.trim()) {
+        if (!lStr.trim()) error('missing-left', 'Missing left', 40, 43, 'warning')
+        if (!rStr.trim()) error('missing-right', 'Missing right', 43, 46, 'warning')
+        if (!uStr.trim()) error('missing-up', 'Missing up', 46, 49, 'warning')
+        if (!dStr.trim()) error('missing-down', 'Missing down', 49, 52, 'warning')
+      }
 
       if (errored) return
 

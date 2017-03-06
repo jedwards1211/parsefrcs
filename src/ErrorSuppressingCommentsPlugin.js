@@ -1,4 +1,4 @@
-const disableNextLineRegex = /^\s*frcslint-disable-next-line\s+(.*)/
+const disableNextLineRegex = /^\s*frcslint-ignore-next-line\s+(.*)/
 
 export default class ErrorOutputPlugin {
   apply(program) {

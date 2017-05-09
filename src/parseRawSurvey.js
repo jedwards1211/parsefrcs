@@ -90,7 +90,6 @@ export default function parseRawSurvey(emitter, file) {
   var tripCommentEndLine = -1
   var tripComment = []
   var inBlockComment = false
-  var blockCommentStartLine
   var section
 
   var inches = false
@@ -192,9 +191,7 @@ export default function parseRawSurvey(emitter, file) {
       }
     } else if (line.charAt(0) === '*') {
       inBlockComment = !inBlockComment
-      if (inBlockComment) {
-        blockCommentStartLine = lineNumber
-      } else if (line.length > 1) {
+      if (!inBlockComment && line.length > 1) {
         emitter.emit('comment', {
           file,
           line: lineNumber,

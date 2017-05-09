@@ -194,8 +194,7 @@ export default function parseRawSurvey(emitter, file) {
       inBlockComment = !inBlockComment
       if (inBlockComment) {
         blockCommentStartLine = lineNumber
-      }
-      else if (lineNumber === blockCommentStartLine + 1 && line.length > 1) {
+      } else if (line.length > 1) {
         emitter.emit('comment', {
           file,
           line: lineNumber,

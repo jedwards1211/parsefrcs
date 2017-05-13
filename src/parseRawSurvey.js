@@ -129,7 +129,7 @@ export default function parseRawSurvey(emitter, file) {
   return function parseRawSurveyLine(line) {
     let errored = false
     function error(type, message, startColumn, endColumn, severity = 'error') {
-      errored = true
+      if (severity === 'error') errored = true
       emitter.emit('error', {
         file,
         line: lineNumber,

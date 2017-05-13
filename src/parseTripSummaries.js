@@ -1,49 +1,28 @@
-import {strictParseInt, parseUint, parseUfloat} from './utils'
-import {trimStart} from 'lodash'
+import {tripSummaryRegex} from './regexes'
 
 var tripStart = /^ {2}\d | {1}\d{2} |\d{3} |\d{4} /
 
 export function parseFirstLineOfSummary(line) {
-  if (line.startsWith('\f')) {
-    line = line.substring(1)
-  }
+  const match = tripSummaryRegex.exec(line)
 
-  try {
-    var tripNum = strictParseInt(line.substring(0, 4).trim())
-
-    if (tripNum >= 1000) {
-      // There are only 3 columns reserved for the trip number, so when we
-      // get to trips in the 1000s an extra digit will push the rest of the
-      // line over.  So delete a space after the trip number so the rest
-      // of the line can be parsed as usual.
-      line = line.substring(0, 4).concat(line.substring(5))
-    }
-
-    var year = strictParseInt(line.substring(11, 14).trim())
-
-    if (year >= 100) {
-      year += 1900
-      // I discovered this by accident!
-      // Dates after 2000 have 3 digits in the file (e.g. 5/28/114), and the
-      // extra digit pushes the rest of the line over one character.  So just
-      // delete the extra character so that the rest of the line can be parsed
-      // as usual.
-      line = line.substring(0, 11).concat(line.substring(12))
-    }
-
+  if (match) {
+    let year = parseInt(match[4])
+    if (year < 1000) year += 1900
     return {
-      tripNum,
-      date: new Date(year, parseUint(trimStart(line.substring(5, 7))) - 1, parseUint(trimStart(line.substring(8, 10)))),
-      footage: parseUfloat(trimStart(line.substring(14, 23))),
-      numShots: parseUfloat(trimStart(line.substring(24, 28))),
-      name: line.substring(30, 111).trim(),
-      excludedFootage: parseUfloat(trimStart(line.substring(120, 127))),
-      numExcludedShots: parseUint(trimStart(line.substring(127, 130))),
+      tripNum: parseInt(match[1]),
+      date: new Date(
+        year,
+        parseInt(match[2]) - 1,
+        parseInt(match[3]),
+      ),
+      footage: parseFloat(match[5]),
+      numShots: parseInt(match[6]),
+      name: match[7].trim(),
+      excludedFootage: parseFloat(match[8]),
+      numExcludedShots: parseInt(match[9]),
     }
   }
-  catch (e) {
-    // return undefined;
-  }
+  return null
 }
 
 /**

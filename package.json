@@ -1,6 +1,6 @@
 {
   "name": "parsefrcs",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Parses FRCS cave survey data and converts to other formats",
   "main": "frcs2walls.js",
   "bin": {
@@ -16,6 +16,7 @@
     "flow": "flow",
     "flow:watch": "flow-watch --ignore lib/ --ignore node_modules/ --watch .flowconfig --watch src/ --watch test/",
     "test": "mocha $npm_package_config_mocha",
+    "test:watch": "mocha --watch $npm_package_config_mocha",
     "coverage": "babel-node ./node_modules/.bin/isparta cover --report lcov _mocha -- $npm_package_config_mocha",
     "build": "rimraf lib && babel src --out-dir lib",
     "prepublish": "npm run lint:fix && flow && npm test && npm run build"

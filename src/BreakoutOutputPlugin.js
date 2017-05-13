@@ -77,11 +77,11 @@ export default class BreakoutOutputPlugin {
       else console.log(data)
     })
 
-    program.plugin('parser', (parser) => {
+    program.plugin('parser', (parser: Tapable) => {
       let stationPositions: {[name: string]: CalculatedShot} = {}
       // let comment: ?string
 
-      parser.plugin('beforeCalculatedSurveyFile', function (file) {
+      parser.plugin('beforeCalculatedSurveyFile', () => {
         stationPositions = {}
       })
 
@@ -90,7 +90,7 @@ export default class BreakoutOutputPlugin {
         return shot
       })
 
-      parser.plugin('beforeRawSurveyFile', (file) => {
+      parser.plugin('beforeRawSurveyFile', () => {
         this.currentTrip = undefined
       })
       parser.plugin('trip', (trip: TripWithSummary) => {
@@ -110,7 +110,7 @@ export default class BreakoutOutputPlugin {
       //   comment = _comment
       //   return _comment
       // })
-      parser.plugin('shot', (shot) => {
+      parser.plugin('shot', (shot: Object) => {
         const {currentTrip, currentCave} = this
         if (!currentTrip || !currentCave) return shot
 

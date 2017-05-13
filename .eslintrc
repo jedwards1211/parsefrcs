@@ -1,6 +1,7 @@
 {
   "extends": [
-    "eslint-config-andy"
+    "@jedwards1211/eslint-config",
+    "@jedwards1211/eslint-config-flow",
   ],
   "env": {
     "node": true,
@@ -10,3 +11,4 @@
     "no-console": 0
   }
 }
+

@@ -48,7 +48,7 @@
     "eslint": "^3.4.0",
     "eslint-config-andy": "github:jedwards1211/eslint-config-andy#2.0.0-beta7",
     "eslint-watch": "^3.0.0",
-    "flow-bin": "^0.36.0",
+    "flow-bin": "^0.41.0",
     "flow-watch": "^1.0.0",
     "isparta": "^4.0.0",
     "istanbul": "^0.4.5",

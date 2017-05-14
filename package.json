@@ -62,7 +62,7 @@
     "isparta": "^4.0.0",
     "istanbul": "^0.4.5",
     "metacave-flow": "github:jedwards1211/metacave-flow",
-    "mocha": "^3.3.0",
+    "mocha": "^3.4.0",
     "pre-commit": "^1.2.2",
     "rimraf": "^2.6.1",
     "sinon": "^2.2.0",

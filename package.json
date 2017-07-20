@@ -75,7 +75,7 @@
     "line-reader": "github:jedwards1211/line-reader#sync-line-reader",
     "lodash": "^4.17.4",
     "node-getopt": "^0.2.3",
-    "tapable": "^0.2.6",
+    "tapable": "^0.2.7",
     "untildify": "^3.0.2"
   },
   "pre-commit": [

@@ -64,7 +64,7 @@
     "metacave-flow": "github:jedwards1211/metacave-flow",
     "mocha": "^3.3.0",
     "pre-commit": "^1.2.2",
-    "rimraf": "^2.6.1",
+    "rimraf": "^2.6.2",
     "sinon": "^2.2.0",
     "validate-commit-msg": "^2.12.1",
     "wr": "^1.3.1"

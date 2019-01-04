@@ -186,7 +186,7 @@ export default class BreakoutOutputPlugin {
         }
 
         let {incFs, incBs, azmFs, azmBs} = shot
-        if (!Number.isFinite(incFs) || !Number.isFinite(incBs)) {
+        if (!Number.isFinite(incFs) && !Number.isFinite(incBs)) {
           if (Number.isFinite(azmFs)) incFs = 0
           else if (Number.isFinite(azmBs)) incBs = 0
         }

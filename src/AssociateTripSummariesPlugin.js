@@ -29,7 +29,10 @@ export default class AssociateTripSummariesPlugin {
       parser.plugin('trip', function (trip) {
         var tripNum = ++tripCounts[currentDir]
         var summary = tripMap[currentDir][tripNum]
-        return _.assign({}, summary, trip, {tripNum})
+        return _.assign({}, trip, summary, {
+          tripNum,
+          name: trip.name || summary.name,
+        })
       })
     })
   }

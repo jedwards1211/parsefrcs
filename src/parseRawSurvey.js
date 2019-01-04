@@ -85,6 +85,8 @@ FI B  DD
  */
 export default function parseRawSurvey(emitter, file) {
   var tripName
+  var tripSurveyors
+  var tripDate
   var inTripComment = true
   var tripCommentStartLine = 1
   var tripCommentEndLine = -1
@@ -184,6 +186,21 @@ export default function parseRawSurvey(emitter, file) {
 
       if (lineNumber === tripCommentStartLine + 1) {
         tripName = line && line.trim()
+      } else if (lineNumber === tripCommentStartLine + 2) {
+        const match = /^(.+?)\s*[-.]\s*(\d+)\/(\d+)\/(\d+)$/.exec(line && line.trim())
+        if (match) {
+          let k = 1
+          const surveyors = match[k++]
+          const month = parseInt(match[k++])
+          const day = parseInt(match[k++])
+          const year = parseInt(match[k++])
+          tripDate = new Date(year < 70 ? year + 2000 : year, month - 1, day)
+          tripSurveyors = surveyors.split(
+            surveyors.indexOf(';') >= 0
+              ? /\s*;\s*/g
+              : /\s*,\s*/g
+          )
+        }
       }
       let match = /^\*\*\*([^*])\*\*\*/.exec(line)
       if (match) {
@@ -230,6 +247,8 @@ export default function parseRawSurvey(emitter, file) {
         endLine: tripCommentEndLine,
         cave,
         name: tripName,
+        date: tripDate,
+        surveyors: tripSurveyors,
         distUnit,
         backAzmType,
         backIncType,

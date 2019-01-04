@@ -21,7 +21,6 @@
     "build": "rimraf lib && babel src --out-dir lib",
     "precommit": "npm run lint && flow",
     "prepush": "npm test",
-    "prepublish": "npm run lint && flow && npm test && npm run build && npm run copy-flow-files",
     "prepublish": "npm run lint && flow && npm test && npm run build"
   },
   "config": {
@@ -46,6 +45,7 @@
   "devDependencies": {
     "@jedwards1211/eslint-config": "^1.0.0",
     "@jedwards1211/eslint-config-flow": "^1.0.0",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-plugin-transform-runtime": "^6.23.0",

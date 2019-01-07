@@ -223,6 +223,9 @@ export default function parseRawSurvey(emitter, file) {
       })
     } else if (lineNumber === tripCommentEndLine + 1) {
       var matches = rawHeaderRegex.exec(line)
+      if (!matches) {
+        matches = rawHeaderRegex.exec('FT CC DD')
+      }
       distUnit = matches[1]
       backAzmType = matches[2]
       backIncType = matches[3]
@@ -233,7 +236,7 @@ export default function parseRawSurvey(emitter, file) {
       azmUnit = matches[4]
       incUnit = matches[5]
 
-      if (!/(FT|FI|M )/.test(matches[1])) error('invalid-distance-unit', 'Invalid distance unit', 0, 3)
+      if (!/(FF|FT|FI|M )/.test(matches[1])) error('invalid-distance-unit', 'Invalid distance unit', 0, 3)
       if (!/[CB ]/.test(matches[2].charAt(0))) error('invalid-bs-azimuth-type', 'Invalid backsight azimuth type', 3, 4)
       if (!/[CB ]/.test(matches[3].charAt(0))) error('invalid-bs-inclination-type', 'Invalid backsight inclination type', 4, 5)
       if (!/[DGM]/.test(matches[4].charAt(0))) error('invalid-azimuth-unit', 'Invalid azimuth unit', 6, 7)

@@ -8,9 +8,8 @@ import type {MetacaveData, Cave, Caves, Trip, Surveyors, Station, Shot, ShotMeas
 import type {TripWithSummary, CalculatedShot} from './types'
 
 const distUnits = {
-  'FT': 'ft',
-  'FI': 'ft',
-  'M ': 'm',
+  'F': 'ft',
+  'M': 'm',
 }
 
 const angleUnits = {
@@ -50,7 +49,7 @@ export default class BreakoutOutputPlugin {
     const result = {
       name: trip.name,
       surveyors,
-      distUnit: distUnits[trip.distUnit.toUpperCase()],
+      distUnit: distUnits[trip.distUnit[0].toUpperCase()],
       angleUnit: 'deg',
       azmFsUnit: angleUnits[trip.azmUnit.toUpperCase()],
       azmBsUnit: angleUnits[trip.azmUnit.toUpperCase()],

@@ -14,8 +14,8 @@ export default class ErrorOutputPlugin {
         const coloredSeverity = severity === 'error' ? chalk.red.bold('error  ') : chalk.yellow.bold('warning')
 
         const result = [
-          `    ${chalk.bold(line)}: ${coloredSeverity}  ${padEnd(message, 50)}  ${chalk.gray(type)}`,
-          `      ${text.substring(0, startColumn)}${chalk[severity === 'error' ? 'bgRed' : 'bgYellow'].bold(text.substring(startColumn, endColumn))}${text.substring(endColumn)}`,
+          chalk`    {bold ${line}}: ${coloredSeverity}  ${padEnd(message, 50)}  {gray ${type}}`,
+          chalk`      ${text.substring(0, startColumn)}{${severity === 'error' ? 'bgRed' : 'bgYellow'}.${severity === 'error' ? 'whiteBright' : 'black'}.bold ${text.substring(startColumn, endColumn)}}${text.substring(endColumn)}`,
         ]
         if (process.env.CI) result.push(
           `      ${repeat(' ', startColumn)}${repeat('^', endColumn - startColumn)}`,
@@ -32,7 +32,7 @@ export default class ErrorOutputPlugin {
         if (currentTrip !== lastLoggedTrip) {
           lastLoggedTrip = currentTrip
           const {surveyScan, tripNum, name} = currentTrip
-          console.error('  ' + chalk.bold.underline(`Trip #${tripNum || '?'}: ${name} (${surveyScan || 'scanned notes file unknown'})`))
+          console.error(chalk`  {bold.underline Trip #${tripNum || '?'}: ${name} (${surveyScan || 'scanned notes file unknown'})}`)
         }
         if (error.severity === 'error') {
           errorCount++

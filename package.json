@@ -21,7 +21,7 @@
     "build": "rimraf lib && babel src --out-dir lib",
     "precommit": "npm run lint && flow",
     "prepush": "npm test",
-    "prepublish": "npm run lint && flow && npm test && npm run build"
+    "prepublishOnly": "npm run lint && flow && npm test && npm run build"
   },
   "config": {
     "mocha": "--compilers js:babel-core/register ./test/**/*.js",

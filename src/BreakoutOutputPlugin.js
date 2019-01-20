@@ -174,7 +174,7 @@ export default class BreakoutOutputPlugin {
           for (let station of [fromStation, toStation]) {
             if (!station) continue
             const pos = stationPositions[station.station]
-            if (!station.nev && pos) {
+            if (!(station: Object).nev && pos) {
               (station: Object).nev = [
                 formatLrud(pos.y),
                 formatLrud(pos.x),

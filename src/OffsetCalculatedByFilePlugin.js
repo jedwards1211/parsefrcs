@@ -3,16 +3,16 @@ import path from 'path'
 export default class OffsetCalculatedByFilePlugin {
   apply(program) {
     program.plugin('parser', function (parser) {
-      var currentResources
+      var currentOffset
       parser.plugin('beforeCalculatedSurveyFile', function (file) {
-        currentResources = program.getResources(path.dirname(file))
+        const currentResources = program.getResources(path.dirname(file))
+        if (currentResources) currentOffset = currentResources.offsetCalculated
       })
       parser.plugin('calculatedShot', function (shot) {
-        var offset = currentResources && currentResources.offsetCalculated
-        if (offset) {
-          shot.x += offset.east || 0
-          shot.y += offset.north || 0
-          shot.z += offset.up || 0
+        if (currentOffset) {
+          shot.x += currentOffset.east || 0
+          shot.y += currentOffset.north || 0
+          shot.z += currentOffset.up || 0
         }
         return shot
       })

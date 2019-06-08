@@ -24,6 +24,13 @@ type Options = {
   pretty?: boolean,
 }
 
+type ZeroReference = {
+  utmZone: number,
+  northing: number,
+  easting: number,
+  elevation: number,
+}
+
 function formatLrud(number: number): ?string {
   if (!Number.isFinite(number)) return '0'
   return number.toFixed(2)
@@ -47,7 +54,7 @@ export default class BreakoutOutputPlugin {
     const surveyors: Surveyors = {}
     for (let surveyor of trip.surveyors || []) surveyors[surveyor] = {}
     const result = {
-      name: trip.name,
+      name: `${trip.tripNum} ${trip.name}`,
       surveyors,
       distUnit: distUnits[trip.distUnit[0].toUpperCase()],
       angleUnit: 'deg',
@@ -77,15 +84,31 @@ export default class BreakoutOutputPlugin {
     })
 
     program.plugin('parser', (parser: Tapable) => {
-      let stationPositions: {[name: string]: CalculatedShot} = {}
+      let fixedStations
+      let utmZone: ?number
+      let zeroReference: ?ZeroReference
       // let comment: ?string
 
-      parser.plugin('beforeCalculatedSurveyFile', () => {
-        stationPositions = {}
+      parser.plugin('beforeCalculatedSurveyFile', (file: string) => {
+        utmZone = null
+        zeroReference = null
+        fixedStations = {}
+
+        const currentResources = program.getResources(path.dirname(file))
+        ;({zeroReference} = currentResources || {})
+        if (zeroReference) {
+          ({utmZone} = zeroReference)
+        }
       })
 
       parser.plugin('calculatedShot', (shot: CalculatedShot) => {
-        stationPositions[shot.toName] = shot
+        if (zeroReference) {
+          fixedStations[shot.toName] = {
+            north: shot.y * 0.3048 + zeroReference.northing,
+            east: shot.x * 0.3048 + zeroReference.easting,
+            elev: shot.z * 0.3048 + zeroReference.elevation,
+          }
+        }
         return shot
       })
 
@@ -98,6 +121,17 @@ export default class BreakoutOutputPlugin {
         if (!cave) {
           cave = {}
           this.caves[trip.cave.name] = cave
+          if (utmZone != null) {
+            cave.fixedStations = [
+              {
+                distUnit: "m",
+                ellipsoid: 'WGS84',
+                datum: 'WGS84',
+                utmZone,
+                stations: fixedStations,
+              }
+            ]
+          }
         }
         this.currentCave = cave
         this.currentCaveName = trip.cave.name
@@ -168,19 +202,6 @@ export default class BreakoutOutputPlugin {
             }
           } else {
             measurements = (fromStation.splays || (fromStation.splays = []): any)
-          }
-
-          // add nev to stations
-          for (let station of [fromStation, toStation]) {
-            if (!station) continue
-            const pos = stationPositions[station.station]
-            if (!(station: Object).nev && pos) {
-              (station: Object).nev = [
-                formatLrud(pos.y),
-                formatLrud(pos.x),
-                formatLrud(pos.z),
-              ]
-            }
           }
         }
 

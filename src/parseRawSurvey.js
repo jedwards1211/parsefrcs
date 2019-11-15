@@ -113,6 +113,10 @@ export default function parseRawSurvey(emitter, file) {
     return s.match(/^\s*[0-9]+\s*$/)
   }
   // determines if a cell contains a valid unsigned float or whitespace.
+  function isValidOptFloat(s) {
+    return s.match(/^\s*[-+]?[0-9]*(\.[0-9]*)?\s*$/)
+  }
+  // determines if a cell contains a valid unsigned float or whitespace.
   function isValidOptUFloat(s) {
     return s.match(/^\s*[0-9]*(\.[0-9]*)?\s*$/)
   }
@@ -123,6 +127,10 @@ export default function parseRawSurvey(emitter, file) {
   // determines if a cell contains a valid inclination or whitespace.
   function isValidOptInclination(s) {
     return s.match(/^\s*[-+]?[0-9]*(\.[0-9]*)?\s*$/)
+  }
+  function parseLrud(s) {
+    const value = parseFloat(s)
+    return value < 0 ? NaN : value
   }
 
   var lineNumber = 0
@@ -316,16 +324,16 @@ export default function parseRawSurvey(emitter, file) {
       // Yes, sadly I have found negative LRUD values in Chip's format and apparently
       // his program doesn't fail on them, so I have to accept them here
       // isValidOptFloat instead of isValidOptUFloat
-      var lStr = validate(40, 43, 'left', isValidOptUFloat)
+      var lStr = validate(40, 43, 'left', isValidOptFloat)
 
       // right
-      var rStr = validate(43, 46, 'right', isValidOptUFloat)
+      var rStr = validate(43, 46, 'right', isValidOptFloat)
 
       // up
-      var uStr = validate(46, 49, 'up', isValidOptUFloat)
+      var uStr = validate(46, 49, 'up', isValidOptFloat)
 
       // down
-      var dStr = validate(49, 52, 'down', isValidOptUFloat)
+      var dStr = validate(49, 52, 'down', isValidOptFloat)
 
       // warn if some but not all LRUDs are missing
       if (lStr.trim() || rStr.trim() || uStr.trim() || dStr.trim()) {
@@ -356,13 +364,13 @@ export default function parseRawSurvey(emitter, file) {
         // backsight inclination
         incBs: parseFloat(incBsStr),
         // left
-        l: parseFloat(lStr),
+        l: parseLrud(lStr),
         // right
-        r: parseFloat(rStr),
+        r: parseLrud(rStr),
         // up
-        u: parseFloat(uStr),
+        u: parseLrud(uStr),
         // down
-        d: parseFloat(dStr),
+        d: parseLrud(dStr),
       }
 
       // parse distance

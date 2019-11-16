@@ -6,10 +6,12 @@
   "bin": {
     "frcs2walls": "./lib/frcs2walls.js",
     "frcs2compass": "./lib/frcs2compass.js",
+    "frcs2compass2": "./lib/frcs2compass2.js",
     "frcs2breakout": "./lib/frcs2breakout.js",
     "frcslint": "./lib/frcslint.js"
   },
   "scripts": {
+    "start": "babel-node src/frcs2compass2 ~/cavedata/chipdata/fr ~/cavedata/chipdata/cr --use-rc-files .parsefrcsrc",
     "lint": "eslint src test",
     "lint:fix": "eslint --fix src test",
     "lint:watch": "esw --watch src test",
@@ -72,6 +74,7 @@
   "dependencies": {
     "babel-runtime": "^6.23.0",
     "chalk": "^2.4.2",
+    "json5": "^2.1.1",
     "line-reader": "github:jedwards1211/line-reader#sync-line-reader",
     "lodash": "^4.17.4",
     "node-getopt": "^0.2.3",

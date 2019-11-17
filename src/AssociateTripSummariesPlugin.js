@@ -23,8 +23,8 @@ export default class AssociateTripSummariesPlugin {
 
       parser.plugin('beforeRawSurveyFile', function (file) {
         currentDir = path.dirname(file)
-        tripMap[currentDir] = tripMap[currentDir] || []
-        tripCounts[currentDir] = tripCounts[currentDir] || 0
+        tripMap[currentDir] = []
+        tripCounts[currentDir] = 0
       })
       parser.plugin('trip', function (trip) {
         var tripNum = ++tripCounts[currentDir]

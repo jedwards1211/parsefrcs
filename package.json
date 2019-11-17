@@ -11,7 +11,7 @@
     "frcslint": "./lib/frcslint.js"
   },
   "scripts": {
-    "start": "babel-node src/frcs2compass2 ~/cavedata/chipdata/fr ~/cavedata/chipdata/cr --use-rc-files .parsefrcsrc",
+    "start": "babel-node src/frcs2compass2 ~/cavedata/chipdata/fr ~/cavedata/chipdata/vr ~/cavedata/chipdata/cr --use-rc-files .parsefrcsrc",
     "lint": "eslint src test",
     "lint:fix": "eslint --fix src test",
     "lint:watch": "esw --watch src test",

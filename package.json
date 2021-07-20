@@ -129,7 +129,7 @@
     "chalk": "^2.4.2",
     "json5": "^2.1.1",
     "line-reader": "github:jedwards1211/line-reader#sync-line-reader",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "node-getopt": "^0.2.3",
     "proj4": "^2.5.0",
     "tapable": "^0.2.6",

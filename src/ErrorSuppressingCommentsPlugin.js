@@ -2,12 +2,12 @@ const disableNextLineRegex = /^\s*frcslint-ignore-next-line\s+(.*)/
 
 export default class ErrorOutputPlugin {
   apply(program) {
-    program.plugin('parser', parser => {
+    program.plugin('parser', (parser) => {
       let disableNextFile
       let disableNextLine = NaN
       let disableNextLineRules = new Set()
 
-      parser.plugin('comment', ({file, line, text}) => {
+      parser.plugin('comment', ({ file, line, text }) => {
         const match = disableNextLineRegex.exec(text)
         if (match) {
           disableNextFile = file
@@ -16,10 +16,14 @@ export default class ErrorOutputPlugin {
         }
       })
 
-      parser.plugin('error', ({type, file, line}) => {
-        if (file === disableNextFile && line === disableNextLine + 1 && disableNextLineRules.has(type)) return false
+      parser.plugin('error', ({ type, file, line }) => {
+        if (
+          file === disableNextFile &&
+          line === disableNextLine + 1 &&
+          disableNextLineRules.has(type)
+        )
+          return false
       })
     })
   }
 }
-

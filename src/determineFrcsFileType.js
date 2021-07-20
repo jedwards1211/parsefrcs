@@ -1,7 +1,7 @@
 import lineReader from 'line-reader'
-import {rawHeaderRegex} from './regexes'
-import {parseCalculatedShot} from './parseCalculatedSurvey'
-import {parseFirstLineOfSummary} from './parseTripSummaries'
+import { rawHeaderRegex } from './regexes'
+import { parseCalculatedShot } from './parseCalculatedSurvey'
+import { parseFirstLineOfSummary } from './parseTripSummaries'
 
 /**
  * @param {String} file - a path to a file
@@ -18,12 +18,10 @@ export default function (file) {
     if (line.match(rawHeaderRegex)) {
       type = 'rawSurvey'
       return false
-    }
-    else if (parseFirstLineOfSummary(line)) {
+    } else if (parseFirstLineOfSummary(line)) {
       type = 'tripSummaries'
       return false
-    }
-    else if (parseCalculatedShot(line)) {
+    } else if (parseCalculatedShot(line)) {
       type = 'calculatedSurvey'
       return false
     }

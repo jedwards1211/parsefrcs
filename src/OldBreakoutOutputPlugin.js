@@ -1,22 +1,22 @@
 import fs from 'fs'
 import path from 'path'
-import {flowRight, identity} from 'lodash'
-import {metersToFeet, gradToDeg, milToDeg, oppositeDeg} from './utils'
+import { flowRight, identity } from 'lodash'
+import { metersToFeet, gradToDeg, milToDeg, oppositeDeg } from './utils'
 
 const distConverters = {
-  'f': identity,
-  'F': identity,
-  'm': metersToFeet,
-  'M': metersToFeet,
+  f: identity,
+  F: identity,
+  m: metersToFeet,
+  M: metersToFeet,
 }
 
 const angleConverters = {
-  'd': identity,
-  'D': identity,
-  'g': gradToDeg,
-  'G': gradToDeg,
-  'm': milToDeg,
-  'M': milToDeg,
+  d: identity,
+  D: identity,
+  g: gradToDeg,
+  G: gradToDeg,
+  m: milToDeg,
+  M: milToDeg,
 }
 
 export default class OldBreakoutOutputPlugin {
@@ -33,18 +33,19 @@ export default class OldBreakoutOutputPlugin {
 
     program.plugin('beforeParse', function (files) {
       if (file) {
-        fd = fs.openSync(file, "w")
+        fd = fs.openSync(file, 'w')
         out = function (data) {
           fs.writeSync(fd, data)
         }
-      }
-      else {
+      } else {
         out = process.stdout.write.bind(process.stdout)
       }
 
-      out('From\tTo\tDistance\tFrontsight Azimuth\tFrontsight Inclination\tBacksight Azimuth\t' +
-        'Backsight Inclination\tLeft\tRight\tUp\tDown\tNorth\tEast\tElevation\tDescription\t' +
-        'Date\tSurveyors\tComment\tScanned Notes\n')
+      out(
+        'From\tTo\tDistance\tFrontsight Azimuth\tFrontsight Inclination\tBacksight Azimuth\t' +
+          'Backsight Inclination\tLeft\tRight\tUp\tDown\tNorth\tEast\tElevation\tDescription\t' +
+          'Date\tSurveyors\tComment\tScanned Notes\n'
+      )
     })
 
     program.plugin('afterParse', function () {
@@ -80,17 +81,19 @@ export default class OldBreakoutOutputPlugin {
 
         convDist = distConverters[trip.distUnit[0]]
 
-        convAzmFs = convAzmBs = angleConverters[trip.azmUnit] || angleConverters.d
+        convAzmFs = convAzmBs =
+          angleConverters[trip.azmUnit] || angleConverters.d
         if (trip.backAzmType && trip.backAzmType.toUpperCase() !== 'C') {
           convAzmBs = flowRight(oppositeDeg, convAzmBs)
         }
-        convIncFs = convIncBs = angleConverters[trip.incUnit] || angleConverters.d
+        convIncFs = convIncBs =
+          angleConverters[trip.incUnit] || angleConverters.d
         if (trip.backIncType && trip.backIncType.toUpperCase() !== 'C') {
-          convIncBs = flowRight(a => -a, convIncBs)
+          convIncBs = flowRight((a) => -a, convIncBs)
         }
         return trip
       })
-      parser.plugin('comment', function ({text: _comment}) {
+      parser.plugin('comment', function ({ text: _comment }) {
         comment = _comment
         return _comment
       })
@@ -102,8 +105,10 @@ export default class OldBreakoutOutputPlugin {
         }
         var incFs = shot.incFs
         var incBs = shot.incBs
-        if ((isNaN(incFs) || incFs === null) &&
-          (isNaN(incBs) || incBs === null)) {
+        if (
+          (isNaN(incFs) || incFs === null) &&
+          (isNaN(incBs) || incBs === null)
+        ) {
           incFs = 0
         }
         if (!convIncFs) console.log(currentTrip)
@@ -123,8 +128,12 @@ export default class OldBreakoutOutputPlugin {
           toStationPosition.x,
           toStationPosition.z,
           currentTrip && currentTrip.name,
-          currentTrip && currentTrip.date && currentTrip.date.toISOString().substring(0, 10),
-          currentTrip && currentTrip.surveyors && currentTrip.surveyors.join(', '),
+          currentTrip &&
+            currentTrip.date &&
+            currentTrip.date.toISOString().substring(0, 10),
+          currentTrip &&
+            currentTrip.surveyors &&
+            currentTrip.surveyors.join(', '),
           comment,
           surveyScan,
         ]
@@ -132,10 +141,17 @@ export default class OldBreakoutOutputPlugin {
           cols[0] = currentDir + ':' + cols[0]
           cols[1] = currentDir + ':' + cols[1]
         }
-        out(cols.map(function (val) {
-          return val === undefined || val === null ||
-            (typeof val === 'number' && isNaN(val)) ? '' : val
-        }).join('\t') + '\n')
+        out(
+          cols
+            .map(function (val) {
+              return val === undefined ||
+                val === null ||
+                (typeof val === 'number' && isNaN(val))
+                ? ''
+                : val
+            })
+            .join('\t') + '\n'
+        )
         comment = undefined
         return shot
       })

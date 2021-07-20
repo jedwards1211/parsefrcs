@@ -1,7 +1,7 @@
 import fs from 'fs'
 import Tapable from 'tapable'
 import lineReader from 'line-reader'
-import {EventEmitter} from 'events'
+import { EventEmitter } from 'events'
 import parseRawSurvey from './parseRawSurvey'
 import parseTripSummaries from './parseTripSummaries'
 import parseCalculatedSurvey from './parseCalculatedSurvey'
@@ -23,15 +23,16 @@ export default class FrcsParser extends Tapable {
 
     var summaryFiles = this.files.tripSummaries
 
-    summaryFiles && summaryFiles.forEach(function (summaryFile) {
-      parser.applyPlugins('beforeSummaryFile', summaryFile)
-      var data = fs.readFileSync(summaryFile, {encoding: 'utf8'})
-      var summaries = parseTripSummaries(data)
-      summaries.forEach(function (summary) {
-        summary = parser.applyPluginsWaterfall('tripSummary', summary)
+    summaryFiles &&
+      summaryFiles.forEach(function (summaryFile) {
+        parser.applyPlugins('beforeSummaryFile', summaryFile)
+        var data = fs.readFileSync(summaryFile, { encoding: 'utf8' })
+        var summaries = parseTripSummaries(data)
+        summaries.forEach(function (summary) {
+          summary = parser.applyPluginsWaterfall('tripSummary', summary)
+        })
+        parser.applyPlugins('afterSummaryFile', summaryFile)
       })
-      parser.applyPlugins('afterSummaryFile', summaryFile)
-    })
 
     parser.applyPlugins('afterParseTripSummaries')
   }
@@ -55,11 +56,12 @@ export default class FrcsParser extends Tapable {
 
     var rawSurveyFiles = this.files.rawSurvey
 
-    rawSurveyFiles && rawSurveyFiles.forEach(function (file) {
-      parser.applyPlugins('beforeRawSurveyFile', file)
-      lineReader.eachLineSync(file, parseRawSurvey(events, file))
-      parser.applyPlugins('afterRawSurveyFile', file)
-    })
+    rawSurveyFiles &&
+      rawSurveyFiles.forEach(function (file) {
+        parser.applyPlugins('beforeRawSurveyFile', file)
+        lineReader.eachLineSync(file, parseRawSurvey(events, file))
+        parser.applyPlugins('afterRawSurveyFile', file)
+      })
 
     parser.applyPlugins('afterParseRawSurvey')
   }
@@ -76,11 +78,12 @@ export default class FrcsParser extends Tapable {
 
     var calcSurveyFiles = this.files.calculatedSurvey
 
-    calcSurveyFiles && calcSurveyFiles.forEach(function (file) {
-      parser.applyPlugins('beforeCalculatedSurveyFile', file)
-      lineReader.eachLineSync(file, parseCalculatedSurvey(events))
-      parser.applyPlugins('afterCalculatedSurveyFile', file)
-    })
+    calcSurveyFiles &&
+      calcSurveyFiles.forEach(function (file) {
+        parser.applyPlugins('beforeCalculatedSurveyFile', file)
+        lineReader.eachLineSync(file, parseCalculatedSurvey(events))
+        parser.applyPlugins('afterCalculatedSurveyFile', file)
+      })
 
     parser.applyPlugins('afterParseCalculatedSurvey')
   }

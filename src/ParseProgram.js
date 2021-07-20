@@ -12,9 +12,7 @@ export default class ParseProgram extends Tapable {
     if (!options.getopt.options) {
       options.getopt.options = []
     }
-    options.getopt.options.push(
-      ['h', 'help', 'display this help']
-    )
+    options.getopt.options.push(['h', 'help', 'display this help'])
   }
 
   run() {
@@ -27,7 +25,7 @@ export default class ParseProgram extends Tapable {
       getopt.setHelp(options.getopt.help)
     }
 
-    var opt = this.opt = getopt.bindHelp().parseSystem()
+    var opt = (this.opt = getopt.bindHelp().parseSystem())
 
     if (!opt.argv.length) {
       getopt.showHelp()

@@ -16,18 +16,18 @@ import UntildifyArgvPlugin from './UntildifyArgvPlugin'
 var program = new ParseProgram({
   getopt: {
     help: [
-      "Usage: node frcslint.js <file/dir>... [OPTION]",
-      "Checks frcs data for mistakes",
-      "",
-      "If you pass directories, they will be searched for FRCS format files.",
-      "The type of each file is determined automatically.  For example:",
-      "",
-      "    node frcslint.js C:/FRCS/data",
-      "",
-      "Will check all files in C:/FRCS/data and subfolders.",
-      "",
-      "[[OPTIONS]]",
-      "",
+      'Usage: node frcslint.js <file/dir>... [OPTION]',
+      'Checks frcs data for mistakes',
+      '',
+      'If you pass directories, they will be searched for FRCS format files.',
+      'The type of each file is determined automatically.  For example:',
+      '',
+      '    node frcslint.js C:/FRCS/data',
+      '',
+      'Will check all files in C:/FRCS/data and subfolders.',
+      '',
+      '[[OPTIONS]]',
+      '',
     ].join('\n'),
   },
 })
@@ -44,7 +44,7 @@ program.apply(
   new ErrorSuppressingCommentsPlugin(),
   new ErrorOutputPlugin(),
   new ErrorCodeGetoptPlugin(),
-  new BacksightMismatchErrorsGetoptPlugin(),
+  new BacksightMismatchErrorsGetoptPlugin()
 )
 
 program.run()

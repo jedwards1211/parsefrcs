@@ -1,4 +1,3 @@
-
 export default class WallsOutputGetoptPlugin {
   constructor(options = {}) {
     this.options = options || {}
@@ -9,7 +8,11 @@ export default class WallsOutputGetoptPlugin {
 
     program.plugin('configureGetopt', function (getopt) {
       getopt.options.push(
-        ['', 'wpj=NAME', 'create a Walls project (creates NAME/NAME.wpj and NAME/#.srv for each trip)'],
+        [
+          '',
+          'wpj=NAME',
+          'create a Walls project (creates NAME/NAME.wpj and NAME/#.srv for each trip)',
+        ],
         ['', 'walls-units=OPTS', 'append OPTS to every Walls #units directive']
       )
     })
@@ -17,10 +20,12 @@ export default class WallsOutputGetoptPlugin {
     program.plugin('gotopt', function (opt) {
       if (opt.options.wpj || !options.requireWpjOption) {
         var WallsOutputPlugin = require('./WallsOutputPlugin').default
-        program.apply(new WallsOutputPlugin({
-          project: opt.options.wpj,
-          extraUnits: opt.options['walls-units'],
-        }))
+        program.apply(
+          new WallsOutputPlugin({
+            project: opt.options.wpj,
+            extraUnits: opt.options['walls-units'],
+          })
+        )
       }
     })
   }

@@ -8,7 +8,7 @@ export default class JsonTripSummaryOutputPlugin {
 
     program.plugin('parser', function (parser) {
       parser.plugin('tripSummary', function (summary) {
-        out(JSON.stringify(summary, null, "  ") + '\n')
+        out(JSON.stringify(summary, null, '  ') + '\n')
         return summary
       })
     })

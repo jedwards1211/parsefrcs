@@ -9,8 +9,7 @@ export default class DetectMultiDirectoryPlugin {
           var filedir = path.dirname(files[fileType][i])
           if (!dir) {
             dir = filedir
-          }
-          else if (dir !== filedir) {
+          } else if (dir !== filedir) {
             program.multiDirectory = true
             return
           }

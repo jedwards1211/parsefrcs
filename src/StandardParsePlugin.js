@@ -9,8 +9,14 @@ export default class StandardParsePlugin {
       var summaryFiles = files.tripSummaries
       var calculatedSurvey = files.calculatedSurvey
 
-      if (!rawFiles.length && !summaryFiles.length && !calculatedSurvey.length) {
-        console.error('Failed to find any frcs files among the provided files/directories.')
+      if (
+        !rawFiles.length &&
+        !summaryFiles.length &&
+        !calculatedSurvey.length
+      ) {
+        console.error(
+          'Failed to find any frcs files among the provided files/directories.'
+        )
         process.exit(1)
       }
 
@@ -22,8 +28,7 @@ export default class StandardParsePlugin {
           if (!group) group = groups[dir] = {}
           if (!group[fileType]) {
             group[fileType] = [file]
-          }
-          else {
+          } else {
             group[fileType].push(file)
           }
         })

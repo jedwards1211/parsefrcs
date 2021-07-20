@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
-import {flowRight, identity} from 'lodash'
-import {metersToFeet, gradToDeg, milToDeg, oppositeDeg} from './utils'
+import { flowRight, identity } from 'lodash'
+import { metersToFeet, gradToDeg, milToDeg, oppositeDeg } from './utils'
 
 var distUnitMap = {
   FT: 'D',
@@ -16,19 +16,19 @@ var angleUnitMap = {
 }
 
 var distConverters = {
-  'f': identity,
-  'F': identity,
-  'm': metersToFeet,
-  'M': metersToFeet,
+  f: identity,
+  F: identity,
+  m: metersToFeet,
+  M: metersToFeet,
 }
 
 var angleConverters = {
-  'd': identity,
-  'D': identity,
-  'g': gradToDeg,
-  'G': gradToDeg,
-  'm': milToDeg,
-  'M': milToDeg,
+  d: identity,
+  D: identity,
+  g: gradToDeg,
+  G: gradToDeg,
+  m: milToDeg,
+  M: milToDeg,
 }
 
 function niceNum(n) {
@@ -39,7 +39,7 @@ function formatDate(date) {
   if (!date) {
     return '1 1 1900'
   }
-  return (date.getMonth() + 1) + ' ' + date.getDate() + ' ' + date.getFullYear()
+  return date.getMonth() + 1 + ' ' + date.getDate() + ' ' + date.getFullYear()
 }
 
 function formatSurveyors(surveyors) {
@@ -59,21 +59,40 @@ function formatTrip(cave, trip) {
     distUnitMap[trip.distUnit] || 'D',
     distUnitMap[trip.distUnit] || 'D',
     'D',
-    'L', 'R', 'U', 'D',
-    'L', 'A', 'D',
+    'L',
+    'R',
+    'U',
+    'D',
+    'L',
+    'A',
+    'D',
     'B',
     'T',
   ]
 
-  return ((cave && cave.name) || '').substring(0, 80) + '\r\n' +
-    'SURVEY NAME: ' + (trip.tripNum || trip.tripNum) + ': ' + (trip.name) + '\r\n' +
-    'SURVEY DATE: ' + formatDate(trip.date) + '  COMMENT:' + (trip.name) + '\r\n' +
+  return (
+    ((cave && cave.name) || '').substring(0, 80) +
+    '\r\n' +
+    'SURVEY NAME: ' +
+    (trip.tripNum || trip.tripNum) +
+    ': ' +
+    trip.name +
+    '\r\n' +
+    'SURVEY DATE: ' +
+    formatDate(trip.date) +
+    '  COMMENT:' +
+    trip.name +
+    '\r\n' +
     'SURVEY TEAM:\r\n' +
-    formatSurveyors(trip.surveyors).substring(0, 100) + '\r\n' +
-    'DECLINATION: 0.00  FORMAT: ' + format.join('') + '\r\n' +
+    formatSurveyors(trip.surveyors).substring(0, 100) +
+    '\r\n' +
+    'DECLINATION: 0.00  FORMAT: ' +
+    format.join('') +
+    '\r\n' +
     '\r\n' +
     'FROM         TO           LEN     BEAR    INC     LEFT    RIGHT   UP      DOWN    AZM2    INC2    FLAGS COMMENTS\r\n' +
     '\r\n'
+  )
 }
 
 export default class CompassOutputPlugin {
@@ -91,12 +110,11 @@ export default class CompassOutputPlugin {
 
     program.plugin('beforeParse', function (files) {
       if (file) {
-        fd = fs.openSync(file, "w")
+        fd = fs.openSync(file, 'w')
         out = function (data) {
           fs.writeSync(fd, data)
         }
-      }
-      else {
+      } else {
         out = process.stdout.write.bind(process.stdout)
       }
     })
@@ -140,11 +158,13 @@ export default class CompassOutputPlugin {
 
         convDist = distConverters[trip.distUnit[0]]
 
-        convAzmFs = convAzmBs = angleConverters[trip.azmUnit] || angleConverters.d
+        convAzmFs = convAzmBs =
+          angleConverters[trip.azmUnit] || angleConverters.d
         if (trip.backAzmType && trip.backAzmType[0].toUpperCase() === 'C') {
           convAzmBs = flowRight(oppositeDeg, convAzmBs)
         }
-        convIncFs = convIncBs = angleConverters[trip.incUnit] || angleConverters.d
+        convIncFs = convIncBs =
+          angleConverters[trip.incUnit] || angleConverters.d
         if (trip.backIncType && trip.backIncType[0].toUpperCase() === 'C') {
           convIncBs = flowRight(function (a) {
             return -a
@@ -155,11 +175,10 @@ export default class CompassOutputPlugin {
 
         return trip
       })
-      parser.plugin('comment', function ({text: _comment}) {
+      parser.plugin('comment', function ({ text: _comment }) {
         if (comment) {
           comment += '\t' + _comment
-        }
-        else {
+        } else {
           comment = _comment
         }
         return _comment
@@ -171,8 +190,10 @@ export default class CompassOutputPlugin {
         }
         var incFs = shot.incFs
         var incBs = shot.incBs
-        if ((isNaN(incFs) || incFs === null) &&
-          (isNaN(incBs) || incBs === null)) {
+        if (
+          (isNaN(incFs) || incFs === null) &&
+          (isNaN(incBs) || incBs === null)
+        ) {
           incFs = 0
         }
 

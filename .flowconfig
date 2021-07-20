@@ -1,23 +1,15 @@
 [ignore]
-<PROJECT_ROOT>/test/.*
-.*/node_modules/react/.*
-.*/node_modules/fbjs/.*
-.*/node_modules/json5/.*
-.*/node_modules/babel.*
-.*/node_modules/npmconf.*
-.*/node_modules/y18n.*
-.*/node_modules/config-chain.*
-.*/node_modules/.*/test/.*
+<PROJECT_ROOT>/[^/\\]+\.js$
+<PROJECT_ROOT>/[^/\\]+\.js\.flow$
+<PROJECT_ROOT>/es/.*
+<PROJECT_ROOT>/node_modules/fbjs/.*
+<PROJECT_ROOT>/node_modules/.*/fbjs/.*
+<PROJECT_ROOT>/node_modules/.*/config-chain/.*
 
 [include]
+./src
+./test
 
 [libs]
 
 [options]
-module.system=haste
-module.name_mapper='.*\.sass$' -> 'empty/object'
-module.name_mapper='.*\.scss$' -> 'empty/object'
-module.name_mapper='.*\.css$' -> 'empty/object'
-esproposal.class_static_fields=enable
-esproposal.class_instance_fields=enable
-suppress_comment= \\(.\\|\n\\)*\\flow-issue(parsefrcs)

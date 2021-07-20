@@ -1,6 +1,6 @@
 #!/usr/bin/env babel-node
 
-import {findColumnWidths} from './utils'
+import { findColumnWidths } from './utils'
 import lineReader from 'line-reader'
 
 // returns the most common fixed column widths in the file.
@@ -19,7 +19,7 @@ export default function findFileColumnWidths(file, expectedNumColumns) {
 
   var bestKey
   for (var key in counts) {
-    if (counts.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(counts, key)) {
       if (!bestKey || counts[key] > counts[bestKey]) {
         bestKey = key
       }

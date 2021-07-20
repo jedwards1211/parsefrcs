@@ -1,4 +1,4 @@
-import {tripSummaryRegex} from './regexes'
+import { tripSummaryRegex } from './regexes'
 
 var tripStart = /^ {2}\d | {1}\d{2} |\d{3} |\d{4} /
 
@@ -10,11 +10,7 @@ export function parseFirstLineOfSummary(line) {
     if (year < 1000) year += 1900
     return {
       tripNum: parseInt(match[1]),
-      date: new Date(
-        year,
-        parseInt(match[2]) - 1,
-        parseInt(match[3]),
-      ),
+      date: new Date(year, parseInt(match[2]) - 1, parseInt(match[3])),
       footage: parseFloat(match[5]),
       numShots: parseInt(match[6]),
       name: match[7].trim(),

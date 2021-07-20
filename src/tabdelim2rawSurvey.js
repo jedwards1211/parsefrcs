@@ -15,16 +15,19 @@ function setw(s, length) {
   return a.join(' ') + s
 }
 
-
 console.log(
-  require('fs').readFileSync(process.argv[2], 'utf8').split(/\r\n|\r|\n/)
-  .map(function (line) {
-    return line.split('\t')
-  })
-  .map(function (shot) {
-    return [5, 5, 6, 2, 6, 6, 5, 5, 3, 3, 3, 3].map(function (length, index) {
-      return setw(shot[index], length)
-    }).join('')
-  })
-  .join('\n')
+  require('fs')
+    .readFileSync(process.argv[2], 'utf8')
+    .split(/\r\n|\r|\n/)
+    .map(function (line) {
+      return line.split('\t')
+    })
+    .map(function (shot) {
+      return [5, 5, 6, 2, 6, 6, 5, 5, 3, 3, 3, 3]
+        .map(function (length, index) {
+          return setw(shot[index], length)
+        })
+        .join('')
+    })
+    .join('\n')
 )

@@ -17,17 +17,18 @@ import UntildifyArgvPlugin from './UntildifyArgvPlugin'
 
 var program = new ParseProgram({
   getopt: {
-    help: "Usage: node frcs2breakout.js <file/dir>... [OPTION]\n" +
-          "Converts data from FRCS format to  Breakout files.\n" +
-          "\n" +
-          "If you pass directories, they will be searched for FRCS format files.\n" +
-          "The type of each file is determined automatically.\n" +
-          "Trip summary files will only be associated with raw survey in the same\n" +
-          "directory.  If trip summary files are found in multiple directories, the\n" +
-          "directory names will be used as prefixes in the output.\n" +
-          "\n" +
-          "[[OPTIONS]]\n" +
-          "\n",
+    help:
+      'Usage: node frcs2breakout.js <file/dir>... [OPTION]\n' +
+      'Converts data from FRCS format to  Breakout files.\n' +
+      '\n' +
+      'If you pass directories, they will be searched for FRCS format files.\n' +
+      'The type of each file is determined automatically.\n' +
+      'Trip summary files will only be associated with raw survey in the same\n' +
+      'directory.  If trip summary files are found in multiple directories, the\n' +
+      'directory names will be used as prefixes in the output.\n' +
+      '\n' +
+      '[[OPTIONS]]\n' +
+      '\n',
   },
 })
 

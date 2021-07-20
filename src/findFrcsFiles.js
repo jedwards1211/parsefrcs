@@ -25,8 +25,7 @@ export default function findFrcsFiles(paths, result, options, depth) {
   var stats
   try {
     stats = fs.statSync(paths)
-  }
-  catch (e) {
+  } catch (e) {
     console.error(e.message)
     return
   }
@@ -36,8 +35,7 @@ export default function findFrcsFiles(paths, result, options, depth) {
         findFrcsFiles(path.join(paths, file), result, options, depth + 1)
       }
     })
-  }
-  else {
+  } else {
     var type = determineFrcsFileType(paths)
     if (type) {
       if (!result[type]) result[type] = []

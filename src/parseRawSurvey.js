@@ -1,4 +1,4 @@
-import {rawHeaderRegex} from './regexes'
+import { rawHeaderRegex } from './regexes'
 
 /**
  * Parses a raw cdata.fr survey file.  These look like so:
@@ -148,17 +148,22 @@ export default function parseRawSurvey(emitter, file) {
         startColumn,
         endColumn,
         type,
-        message
+        message,
       })
     }
 
     function validate(startColumn, endColumn, fieldName, validator) {
       const field = line.substring(startColumn, endColumn)
-      if (!validator(field)) error(
-        `${field.trim() ? 'invalid' : 'missing'}-${fieldName.replace(/\s+/g, '-')}`,
-        (field.trim() ? 'Invalid ' : 'Missing ') + fieldName,
-        startColumn, endColumn
-      )
+      if (!validator(field))
+        error(
+          `${field.trim() ? 'invalid' : 'missing'}-${fieldName.replace(
+            /\s+/g,
+            '-'
+          )}`,
+          (field.trim() ? 'Invalid ' : 'Missing ') + fieldName,
+          startColumn,
+          endColumn
+        )
       return field
     }
 
@@ -183,8 +188,7 @@ export default function parseRawSurvey(emitter, file) {
         section = undefined
         tripComment = []
         tripCommentStartLine = lineNumber
-      }
-      else {
+      } else {
         tripCommentEndLine = lineNumber
       }
     } else if (inTripComment) {
@@ -195,7 +199,9 @@ export default function parseRawSurvey(emitter, file) {
       if (lineNumber === tripCommentStartLine + 1) {
         tripName = line && line.trim()
       } else if (lineNumber === tripCommentStartLine + 2) {
-        const match = /^(.+?)\s*[-.]\s*(\d+)\/(\d+)\/(\d+)$/.exec(line && line.trim())
+        const match = /^(.+?)\s*[-.]\s*(\d+)\/(\d+)\/(\d+)$/.exec(
+          line && line.trim()
+        )
         if (match) {
           let k = 1
           const surveyors = match[k++]
@@ -204,9 +210,7 @@ export default function parseRawSurvey(emitter, file) {
           const year = parseInt(match[k++])
           tripDate = new Date(year < 70 ? year + 2000 : year, month - 1, day)
           tripSurveyors = surveyors.split(
-            surveyors.indexOf(';') >= 0
-              ? /\s*;\s*/g
-              : /\s*,\s*/g
+            surveyors.indexOf(';') >= 0 ? /\s*;\s*/g : /\s*,\s*/g
           )
         }
       }
@@ -244,11 +248,21 @@ export default function parseRawSurvey(emitter, file) {
       azmUnit = matches[4]
       incUnit = matches[5]
 
-      if (!/(FT|FI|M )/.test(matches[1])) error('invalid-distance-unit', 'Invalid distance unit', 0, 2)
-      if (!/[CB ]/.test(matches[2].charAt(0))) error('invalid-bs-azimuth-type', 'Invalid backsight azimuth type', 3, 4)
-      if (!/[CB ]/.test(matches[3].charAt(0))) error('invalid-bs-inclination-type', 'Invalid backsight inclination type', 4, 5)
-      if (!/[DGM]/.test(matches[4].charAt(0))) error('invalid-azimuth-unit', 'Invalid azimuth unit', 6, 7)
-      if (!/[DGM]/.test(matches[5].charAt(0))) error('invalid-inclination-unit', 'Invalid inclination unit', 7, 8)
+      if (!/(FT|FI|M )/.test(matches[1]))
+        error('invalid-distance-unit', 'Invalid distance unit', 0, 2)
+      if (!/[CB ]/.test(matches[2].charAt(0)))
+        error('invalid-bs-azimuth-type', 'Invalid backsight azimuth type', 3, 4)
+      if (!/[CB ]/.test(matches[3].charAt(0)))
+        error(
+          'invalid-bs-inclination-type',
+          'Invalid backsight inclination type',
+          4,
+          5
+        )
+      if (!/[DGM]/.test(matches[4].charAt(0)))
+        error('invalid-azimuth-unit', 'Invalid azimuth unit', 6, 7)
+      if (!/[DGM]/.test(matches[5].charAt(0)))
+        error('invalid-inclination-unit', 'Invalid inclination unit', 7, 8)
 
       tripComment = (tripComment || []).join('\n')
 
@@ -284,7 +298,8 @@ export default function parseRawSurvey(emitter, file) {
       // to station name
       var toStr = line.substring(0, 5)
       if (!toStr.trim()) return
-      if (!isValidStation(toStr)) error('invalid-station-name', 'Invalid station name', 0, 5)
+      if (!isValidStation(toStr))
+        error('invalid-station-name', 'Invalid station name', 0, 5)
 
       // from station name
       var fromStr = validate(5, 10, 'from station', isValidStation)
@@ -300,7 +315,8 @@ export default function parseRawSurvey(emitter, file) {
           error(
             invalid ? 'invalid-distance' : 'missing-distance',
             invalid ? 'Invalid distance' : 'Missing distance',
-            10, 17
+            10,
+            17
           )
         }
       } else {
@@ -337,10 +353,13 @@ export default function parseRawSurvey(emitter, file) {
 
       // warn if some but not all LRUDs are missing
       if (lStr.trim() || rStr.trim() || uStr.trim() || dStr.trim()) {
-        if (!lStr.trim()) error('missing-left', 'Missing left', 40, 43, 'warning')
-        if (!rStr.trim()) error('missing-right', 'Missing right', 43, 46, 'warning')
+        if (!lStr.trim())
+          error('missing-left', 'Missing left', 40, 43, 'warning')
+        if (!rStr.trim())
+          error('missing-right', 'Missing right', 43, 46, 'warning')
         if (!uStr.trim()) error('missing-up', 'Missing up', 46, 49, 'warning')
-        if (!dStr.trim()) error('missing-down', 'Missing down', 49, 52, 'warning')
+        if (!dStr.trim())
+          error('missing-down', 'Missing down', 49, 52, 'warning')
       }
 
       if (errored) return
@@ -379,8 +398,8 @@ export default function parseRawSurvey(emitter, file) {
         // sometimes inches are omitted, hence the || 0...I'm assuming it's possible
         // for feet to be omitted as well
         shot.distInches = parseFloat(inchesStr) || 0
-        shot.dist = (parseFloat(feetStr) || 0) + shot.distInches / 12,
-        shot.flag = line.charAt(17)
+        ;(shot.dist = (parseFloat(feetStr) || 0) + shot.distInches / 12),
+          (shot.flag = line.charAt(17))
 
         // NOTE there are two columns around here that can contain a *.
         // I think they might represent different values, but thisis confused by
@@ -388,8 +407,7 @@ export default function parseRawSurvey(emitter, file) {
         // first column that can contain a * for decimal feet shots
         shot.exclude = line.charAt(18) === '*'
       } else {
-        shot.dist = parseFloat(feetStr),
-        shot.flag = line.charAt(16)
+        ;(shot.dist = parseFloat(feetStr)), (shot.flag = line.charAt(16))
         shot.exclude = line.charAt(17) === '*'
       }
 
@@ -400,45 +418,43 @@ export default function parseRawSurvey(emitter, file) {
 
       if (shot.flag === 'H') {
         // distance is horisontal hoffset and incFs is vertical offset
-        var dist = shot.horizDist = shot.dist
+        var dist = (shot.horizDist = shot.dist)
         shot.dist = Math.sqrt(dist * dist + shot.incFs * shot.incFs)
         shot.vertDist = shot.incFs
         shot.incFs = Math.atan2(shot.incFs, dist)
-      }
-      else if (shot.flag === 'D') {
+      } else if (shot.flag === 'D') {
         // distance is as usual, but incFs is vertical offset
         shot.vertDist = shot.incFs
         shot.incFs = Math.asin(shot.incFs / shot.dist)
-      }
-      else shot.flag = null
+      } else shot.flag = null
 
       if (shot.flag === 'H' || shot.flag === 'D') {
         switch (incUnit) {
-        case 'G':
-          shot.incFs *= 200 / Math.PI
-          break
-        case 'M':
-          shot.incFs *= 3200 / Math.PI
-          break
-        default:
-          shot.incFs *= 180 / Math.PI
-          break
+          case 'G':
+            shot.incFs *= 200 / Math.PI
+            break
+          case 'M':
+            shot.incFs *= 3200 / Math.PI
+            break
+          default:
+            shot.incFs *= 180 / Math.PI
+            break
         }
       }
 
       switch (azmUnit) {
-      case 'G':
-        shot.azmFs %= 400.0
-        shot.azmBs %= 400.0
-        break
-      case 'M':
-        shot.azmFs %= 6400.0
-        shot.azmBs %= 6400.0
-        break
-      default:
-        shot.azmFs %= 360.0
-        shot.azmBs %= 360.0
-        break
+        case 'G':
+          shot.azmFs %= 400.0
+          shot.azmBs %= 400.0
+          break
+        case 'M':
+          shot.azmFs %= 6400.0
+          shot.azmBs %= 6400.0
+          break
+        default:
+          shot.azmFs %= 360.0
+          shot.azmBs %= 360.0
+          break
       }
 
       for (var key in shot) {

@@ -74,4 +74,3 @@ export type CalculatedShot = {
   d: number,
   tripNum: number,
 }
-

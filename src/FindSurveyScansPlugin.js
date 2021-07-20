@@ -21,9 +21,9 @@ export default class FindSurveyScansPlugin {
         if (!path.isAbsolute(scanDir)) {
           scanDir = path.join(path.dirname(file), scanDir)
         }
-        var _fileNamePattern = resources.fileNamePattern ?
-          new RegExp(resources.fileNamePattern) :
-          fileNamePattern
+        var _fileNamePattern = resources.fileNamePattern
+          ? new RegExp(resources.fileNamePattern)
+          : fileNamePattern
 
         if (fs.existsSync(scanDir) && fs.statSync(scanDir).isDirectory()) {
           fs.readdirSync(scanDir).forEach(function (file) {
@@ -35,7 +35,10 @@ export default class FindSurveyScansPlugin {
         }
       })
       parser.plugin('tripSummary', function (summary) {
-        if (scans && scans.hasOwnProperty(summary.tripNum)) {
+        if (
+          scans &&
+          Object.prototype.hasOwnProperty.call(scans, summary.tripNum)
+        ) {
           summary.surveyScan = scans[summary.tripNum]
         }
         return summary

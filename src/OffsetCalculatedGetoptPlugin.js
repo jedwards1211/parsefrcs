@@ -11,11 +11,13 @@ export default class OffsetCalculatedGetoptPlugin {
     })
 
     program.plugin('gotopt', function (opt) {
-      program.apply(new OffsetCalculatedPlugin({
-        eastOffset: Number(opt.options['east-offs'] || 0),
-        northOffset: Number(opt.options['north-offs'] || 0),
-        upOffset: Number(opt.options['up-offs'] || 0),
-      }))
+      program.apply(
+        new OffsetCalculatedPlugin({
+          eastOffset: Number(opt.options['east-offs'] || 0),
+          northOffset: Number(opt.options['north-offs'] || 0),
+          upOffset: Number(opt.options['up-offs'] || 0),
+        })
+      )
     })
   }
 }

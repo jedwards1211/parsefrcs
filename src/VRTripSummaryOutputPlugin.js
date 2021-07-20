@@ -1,8 +1,8 @@
 import formatTripSummary from './formatTripSummary'
 
 export default class VRTripSummaryOutputPlugin {
-// generates trip summaries from the trip comments in raw survey
-// data with a format like I found in Chip's cdata.vr
+  // generates trip summaries from the trip comments in raw survey
+  // data with a format like I found in Chip's cdata.vr
   apply(program) {
     program.plugin('parser', function (parser) {
       var summary
@@ -15,8 +15,10 @@ export default class VRTripSummaryOutputPlugin {
         }
         summary = {
           name: lines[0].trim(),
-          surveyors: lines[1].substring(0, dotIndex)
-            .trim().split(/\s*,\s*/),
+          surveyors: lines[1]
+            .substring(0, dotIndex)
+            .trim()
+            .split(/\s*,\s*/),
           date: new Date(lines[1].substring(dotIndex + 1).trim()),
           section: lines[2].trim(),
           tripNum: parseInt(lines[3].substring(3, 7).trim()),

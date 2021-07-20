@@ -67,11 +67,11 @@ export function oppositeDeg(deg) {
 }
 
 export function gradToDeg(grad) {
-  return grad * 18 / 20
+  return (grad * 18) / 20
 }
 
 export function milToDeg(mil) {
-  return mil * 18 / 320
+  return (mil * 18) / 320
 }
 
 export function azmDiff(a, b) {

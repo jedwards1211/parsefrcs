@@ -1,5 +1,5 @@
-import {strictParseInt, parseUint, parseOptUint} from './utils'
-import {trimStart} from 'lodash'
+import { strictParseInt, parseUint, parseOptUint } from './utils'
+import { trimStart } from 'lodash'
 
 /**
  * Parses data from a calculated survey file.  These look like so:
@@ -50,10 +50,9 @@ export function parseCalculatedShot(line) {
         // down at to station
         d: parseUint(trimStart(line.substring(68, 72))) / 10,
         // trip number
-        tripNum: parseOptUint(trimStart(line.substring(72, 78)))
+        tripNum: parseOptUint(trimStart(line.substring(72, 78))),
       }
-    }
-    catch (e) {
+    } catch (e) {
       // return undefined;
     }
   }

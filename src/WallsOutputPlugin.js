@@ -35,9 +35,7 @@ export default class WallsOutputPlugin {
     var frcsFiles
     var multicave = program.multiDirectory
 
-    var wpj = [
-      ';WALLS Project file',
-    ]
+    var wpj = [';WALLS Project file']
 
     program.plugin('beforeParse', function (files) {
       frcsFiles = files
@@ -79,8 +77,13 @@ export default class WallsOutputPlugin {
               var newName
               do {
                 num++
-                newName = outFile.substring(0, 8 - Math.floor(Math.log(num) / Math.log(10)) - 2) +
-                  '~' + num
+                newName =
+                  outFile.substring(
+                    0,
+                    8 - Math.floor(Math.log(num) / Math.log(10)) - 2
+                  ) +
+                  '~' +
+                  num
               } while (usedFixFileNames[newName.toLowerCase()])
               outFile = newName
             }
@@ -96,7 +99,7 @@ export default class WallsOutputPlugin {
         if (project) {
           var outFile = path.join(project, fixFileNameMap[file])
           process.stderr.write('Writing ' + outFile + '...')
-          fd = fs.openSync(outFile, "w")
+          fd = fs.openSync(outFile, 'w')
           out = function (data) {
             fs.writeSync(fd, data)
           }
@@ -114,14 +117,7 @@ export default class WallsOutputPlugin {
         out('\r\n')
       })
       parser.plugin('calculatedShot', function (shot) {
-        out([
-          '#fix',
-          shot.toName,
-          shot.x,
-          shot.y,
-          shot.z,
-          '\r\n',
-        ].join('\t'))
+        out(['#fix', shot.toName, shot.x, shot.y, shot.z, '\r\n'].join('\t'))
         return shot
       })
       parser.plugin('afterCalculatedSurveyFile', function (file) {
@@ -151,19 +147,21 @@ export default class WallsOutputPlugin {
           tripFile = path.join(project, tripFileBase + '.srv')
 
           process.stderr.write('Writing ' + tripFile + '...')
-          fd = fs.openSync(tripFile, "w")
+          fd = fs.openSync(tripFile, 'w')
           out = function (data) {
             fs.writeSync(fd, data)
           }
 
-          wpj.push('.SURVEY ' + (trip.tripNum ? String(trip.tripNum) + ': ' : '') +
-            trip.name)
+          wpj.push(
+            '.SURVEY ' +
+              (trip.tripNum ? String(trip.tripNum) + ': ' : '') +
+              trip.name
+          )
           wpj.push('.NAME ' + tripFileBase)
           if (trip.distUnit.charAt(0) === 'F') {
             wpj.push('.STATUS 24')
           }
-        }
-        else {
+        } else {
           out('\r\n')
         }
         out(';')
@@ -199,38 +197,38 @@ export default class WallsOutputPlugin {
         }
         out('\r\n')
       })
-      parser.plugin('comment', function ({text: comment}) {
+      parser.plugin('comment', function ({ text: comment }) {
         out(';' + comment + '\r\n')
       })
       parser.plugin('shot', function (shot) {
         var cols = [
           shot.from,
           shot.to,
-          shot.distInches ?
-          Math.floor(shot.dist) + 'i' + shot.distInches :
-            shot.dist,
-          shot.dist === 0 ?
-            '0' :
-            anglePair(shot.azmFs, shot.azmBs),
+          shot.distInches
+            ? Math.floor(shot.dist) + 'i' + shot.distInches
+            : shot.dist,
+          shot.dist === 0 ? '0' : anglePair(shot.azmFs, shot.azmBs),
         ]
         if (shot.dist === 0) {
           cols.push('0')
-        }
-        else {
+        } else {
           if (shot.flag === 'D' || shot.flag === 'H') {
             cols.push('0', '--', shot.vertDist)
-          }
-          else {
+          } else {
             cols.push(anglePair(shot.incFs, shot.incBs))
           }
         }
         if (anyValid(shot.l, shot.r, shot.u, shot.d)) {
-          cols.push('<' + [
-            optionalNum(shot.l),
-            optionalNum(shot.r),
-            optionalNum(shot.u),
-            optionalNum(shot.d),
-          ].join(',') + '>')
+          cols.push(
+            '<' +
+              [
+                optionalNum(shot.l),
+                optionalNum(shot.r),
+                optionalNum(shot.u),
+                optionalNum(shot.d),
+              ].join(',') +
+              '>'
+          )
         }
         out(cols.join('\t') + '\r\n')
       })

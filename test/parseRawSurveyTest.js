@@ -1,16 +1,16 @@
-import {expect} from 'chai'
+import { expect } from 'chai'
 import EventEmitter from 'events'
 import parseRawSurvey from '../src/parseRawSurvey'
 
 describe('parseRawSurvey', () => {
-  it("works when line ends before all LRUD columns", () => {
+  it('works when line ends before all LRUD columns', () => {
     const emitter = new EventEmitter()
     const parseLine = parseRawSurvey(emitter, 'blah.txt')
 
     const shots = []
     const errors = []
-    emitter.on('shot', shot => shots.push(shot))
-    emitter.on('error', error => errors.push(error))
+    emitter.on('shot', (shot) => shots.push(shot))
+    emitter.on('error', (error) => errors.push(error))
 
     parseLine('     Fisher Ridge Cave System')
     parseLine('Test Trip')
@@ -47,8 +47,8 @@ describe('parseRawSurvey', () => {
 
     const trips = []
     const errors = []
-    emitter.on('trip', trip => trips.push(trip))
-    emitter.on('error', error => errors.push(error))
+    emitter.on('trip', (trip) => trips.push(trip))
+    emitter.on('error', (error) => errors.push(error))
 
     parseLine('     Fisher Ridge Cave System')
     parseLine('Test Trip')

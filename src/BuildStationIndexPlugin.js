@@ -1,7 +1,7 @@
 // @flow
 
-import type {Tapable} from 'tapable'
-import type {Shot, TripWithSummary} from './types'
+import type { Tapable } from 'tapable'
+import type { Shot, TripWithSummary } from './types'
 
 type Cave = {
   stations: {
@@ -31,7 +31,7 @@ export default class BuildStationIndexPlugin {
 
   options: Options
   stationIndex: StationIndex = {
-    caves: {}
+    caves: {},
   }
   caves: Caves = this.stationIndex.caves
   currentCave: ?Cave
@@ -44,13 +44,13 @@ export default class BuildStationIndexPlugin {
     })
 
     program.plugin('parser', (parser: Tapable) => {
-      parser.plugin('shot', (shot: Shot) => {
-        const {currentCave, currentTrip: trip} = this
+      parser.plugin('shot', (shot: Shot): Shot => {
+        const { currentCave, currentTrip: trip } = this
         if (currentCave) {
           for (let station of [shot.from, shot.to]) {
             let shots = currentCave.stations[station]
             if (!shots) shots = currentCave.stations[station] = []
-            shots.push({shot, trip})
+            shots.push({ shot, trip })
           }
         }
         return shot
@@ -59,18 +59,18 @@ export default class BuildStationIndexPlugin {
       parser.plugin('beforeRawSurveyFile', () => {
         this.currentTrip = undefined
       })
-      parser.plugin('trip', (trip: TripWithSummary) => {
+      parser.plugin('trip', (trip: TripWithSummary): TripWithSummary => {
         this.currentTrip = trip
         let cave = this.caves[trip.cave.name]
         if (!cave) {
-          cave = {stations: {}}
+          cave = { stations: {} }
           this.caves[trip.cave.name] = cave
         }
         this.currentCave = cave
         this.currentCaveName = trip.cave.name
         return trip
       })
-      parser.plugin('shot', (shot: Shot) => {
+      parser.plugin('shot', (shot: Shot): Shot => {
         return shot
       })
     })
